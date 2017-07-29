@@ -3,15 +3,18 @@ import ReactDOM from 'react-dom';
 import App from './src/App';
 import Layout from './src/Layout';
 import { Provider } from 'mobx-react';
-import quizStore from './src/stores/quizStore';
+import fourQuizStore from './stores/fourQuizStore';
+import lionQuizStore from './stores/lionQuizStore';
+import nineQuizStore from './stores/nineQuizStore';
+import randomQuizStore from './stores/randomQuizStore';
 
 ReactDOM.render(
-  <Provider
-    quizStore={quizStore}
+  <Provider 
+    fourQuizStore={fourQuizStore} 
+    lionQuizStore={lionQuizStore} 
+    nineQuizStore={nineQuizStore} 
+    randomQuizStore={randomQuizStore} 
   >
-    <div>
-        <Layout />
-
-    </div>
+    <App />
   </Provider>
 , document.getElementById('root'));
