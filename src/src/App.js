@@ -6,7 +6,7 @@ import {observer, inject} from 'mobx-react';
 class App extends Component {
   render() {
   const { gameStart, quizState } = this.props.quizStore;
-  const { quizList, index, texts, playingGame, remainSec } = quizState;
+  const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
     return (
       <div className="App">
         <button
@@ -29,10 +29,18 @@ class App extends Component {
           ))}
         </div>
         <div>
-          맞은 정답:
-          {this.props.quizStore.quizState.correctAnswerList.map((correctAnswer, index) => (
+          맞은 답:
+          {correctAnswerList.map((correctAnswer, index) => (
             <div key={index}>
               {correctAnswer}
+            </div>
+          ))}
+        </div>    
+        <div>
+          틀린 답:
+          {wrongAnswerList.map((wrongAnswer, index) => (
+            <div key={index}>
+              {wrongAnswer}
             </div>
           ))}
         </div>    
