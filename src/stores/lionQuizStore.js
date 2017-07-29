@@ -21,7 +21,9 @@ export class LionQuizStore {
     texts: [
     ],
     ddang: null,
-    quizData: null
+    quizData: null,
+    successVisible: false,
+    failVisible: false
   }
 
   constructor(props) {
@@ -168,8 +170,13 @@ export class LionQuizStore {
       correctAnswerList,
       recording: false,
       index: index+1,
+      successVisible: true
     }
+
     this.quizState = state;
+    setTimeout(() => {
+      this.quizState.successVisible = false
+    }, 1000);
     recognition.onresult = null;
     recognition.abort();
     this.delay(500).then(this.gameStart());
@@ -186,9 +193,14 @@ export class LionQuizStore {
       ...this.quizState,
       recording: false,
       index: index+1,
+      failVisible: true,
       quizData
     }
     this.quizState = state;
+    setTimeout(() => {
+      this.quizState.failVisible = false
+    }, 1000);
+
     recognition.abort();
     this.quizState.audio.play();
     console.log(this.quizState.quizList[index]+" 녹음끝");
@@ -215,6 +227,7 @@ export class LionQuizStore {
   }
 
   identifyAnswer = (index, userAnswer) => {
+    console.log(userAnswer);
     const {quizList, answerList} = this.quizState
     for (let i = 0; i < answerList[index].length; i++) {
       if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Header from './layout/Header';
+import SuccessOverlay from './SuccessOverlay';
+import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import four_text from '../img/four_text.png'
 
@@ -10,9 +12,15 @@ import four_text from '../img/four_text.png'
 class FourQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.fourQuizStore;
-    const { started, showLastQuiz, remainSec, showLastAnswer } = quizState;
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
+          <SuccessOverlay
+            visible={successVisible}
+          />
+          <FailOverlay
+            visible={failVisible}
+          />
           <Header/>
           <div className="FourQuizApp fadeInLeft animated">
               <div className="sub_header">

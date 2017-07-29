@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Header from './layout/Header';
+import SuccessOverlay from './SuccessOverlay';
+import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import nine_text from '../img/nine_text.png'
 
@@ -10,9 +12,15 @@ import nine_text from '../img/nine_text.png'
 class NineQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.nineQuizStore;
-    const { started, showLastQuiz, remainSec, showLastAnswer } = quizState;
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
+          <SuccessOverlay
+            visible={successVisible}
+          />
+          <FailOverlay
+            visible={failVisible}
+          />
           <Header/>
           <div className="NineQuizApp fadeInLeft animated">
               <div className="sub_header">

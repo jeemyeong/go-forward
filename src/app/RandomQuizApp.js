@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Header from './layout/Header';
+import SuccessOverlay from './SuccessOverlay';
+import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import random_text from '../img/random_text.png'
 
@@ -10,9 +12,15 @@ import random_text from '../img/random_text.png'
 class RandomQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.randomQuizStore;
-    const { started, showLastQuiz, remainSec, showLastAnswer } = quizState;
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
+          <SuccessOverlay
+            visible={successVisible}
+          />
+          <FailOverlay
+            visible={failVisible}
+          />
           <Header/>
           <div className="RandomQuizApp fadeInLeft animated">
               <div className="sub_header">

@@ -21,7 +21,9 @@ export class NineQuizStore {
     texts: [
     ],
     ddang: null,
-    quizData: null
+    quizData: null,
+    successVisible: false,
+    failVisible: false
   }
 
   constructor(props) {
@@ -72,7 +74,7 @@ export class NineQuizStore {
       return null;
     }
     this.textToSpeech(quizList[index]);
-    this.delay(1000).then(()=>this.recordAnswer());
+    this.delay(500).then(()=>this.recordAnswer());
   }
 
   @action
@@ -112,12 +114,11 @@ export class NineQuizStore {
 
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
-    const showLastQuiz = quizList[index].split(" ")
     if(!recording){
       const state = {
         ...this.quizState,
         recording: true,
-        showLastQuiz,
+        showLastQuiz: quizList[index].split(" "),
         showLastAnswer: "",
       }
       this.quizState = state;
@@ -169,8 +170,13 @@ export class NineQuizStore {
       correctAnswerList,
       recording: false,
       index: index+1,
+      successVisible: true
     }
+
     this.quizState = state;
+    setTimeout(() => {
+      this.quizState.successVisible = false
+    }, 1000);
     recognition.onresult = null;
     recognition.abort();
     this.delay(500).then(this.gameStart());
@@ -187,9 +193,14 @@ export class NineQuizStore {
       ...this.quizState,
       recording: false,
       index: index+1,
+      failVisible: true,
       quizData
     }
     this.quizState = state;
+    setTimeout(() => {
+      this.quizState.failVisible = false
+    }, 1000);
+
     recognition.abort();
     this.quizState.audio.play();
     console.log(this.quizState.quizList[index]+" 녹음끝");
@@ -216,6 +227,7 @@ export class NineQuizStore {
   }
 
   identifyAnswer = (index, userAnswer) => {
+    console.log(userAnswer);
     const {quizList, answerList} = this.quizState
     for (let i = 0; i < answerList[index].length; i++) {
       if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){

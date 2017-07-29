@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Header from './layout/Header';
+import SuccessOverlay from './SuccessOverlay';
+import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import lion_text from '../img/lion_text.png'
 
@@ -10,9 +12,15 @@ import lion_text from '../img/lion_text.png'
 class LionQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.lionQuizStore;
-    const { started, showLastQuiz, remainSec, showLastAnswer } = quizState;
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
+          <SuccessOverlay
+            visible={successVisible}
+          />
+          <FailOverlay
+            visible={failVisible}
+          />
           <Header/>
           <div className="LionQuizApp fadeInLeft animated">
               <div className="sub_header">
