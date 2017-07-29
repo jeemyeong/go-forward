@@ -3,12 +3,12 @@ import {observer, inject} from 'mobx-react';
 
 @inject("fourQuizStore")
 @observer
-class App extends Component {
+class FourQuizApp extends Component {
   render() {
   const { gameStart, quizState } = this.props.fourQuizStore;
   const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
     return (
-      <div className="App">
+      <div className="FourQuizApp">
         <button
           onClick={gameStart}
         >
@@ -49,4 +49,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default FourQuizApp;

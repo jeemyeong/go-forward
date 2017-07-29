@@ -1,7 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './src/App';
-import Layout from './src/Layout';
+import Layout from './app/Layout';
 import { Provider } from 'mobx-react';
 import fourQuizStore from './stores/fourQuizStore';
 import lionQuizStore from './stores/lionQuizStore';
@@ -15,6 +14,6 @@ ReactDOM.render(
     nineQuizStore={nineQuizStore} 
     randomQuizStore={randomQuizStore} 
   >
-    <App />
+    <Layout />
   </Provider>
 , document.getElementById('root'));
