@@ -1,0 +1,61 @@
+.gf_header img {
+    display: block;
+    margin: 0 auto;
+}
+.gf_header {
+    height: 182px;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gf_main {
+    padding: 70px;
+}
+.gf_main > .row + .row {
+    margin-top: 70px;
+}
+
+
+/* 메인 개별 박스 설정 */
+.go_howto {
+    background: url('../img/howto_bg.png') no-repeat center / cover;
+    width: 760px;
+    height: 178px;
+    margin-bottom: 70px;
+}
+
+.linkbox_square {
+    width: 365px;
+    height: 365px;
+    position: relative;
+}
+
+.go_lion {
+    background: url('../img/lion_bg.png') no-repeat center / cover;
+}
+.go_four {
+    background: url('../img/four_bg.png') no-repeat center / cover;
+}
+.go_nine {
+    background: url('../img/nine_bg.png') no-repeat center / cover;
+}
+.go_random {
+    background: url('../img/random_bg.png') no-repeat center / cover;
+}
+
+.go_add {
+    background: url('../img/goadd_bg.png') no-repeat center / cover;
+    width: 760px;
+    height: 178px;
+    margin-top: 70px;
+}
+
+.linkbox_square .text_wrap {
+    position: absolute;
+    width: 100%;
+    text-align: center;
+    bottom: 54px;
+}

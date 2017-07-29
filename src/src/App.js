@@ -35,7 +35,7 @@ class App extends Component {
               {correctAnswer}
             </div>
           ))}
-        </div>    
+        </div>
         <div>
           틀린 답:
           {wrongAnswerList.map((wrongAnswer, index) => (
