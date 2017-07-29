@@ -5,16 +5,21 @@ import {observer, inject} from 'mobx-react';
 @observer
 class App extends Component {
   render() {
+  const { gameStart, quizState } = this.props.quizStore;
+  const { quizList, index, texts } = quizState;
     return (
       <div className="App">
         <button
-          onClick={this.props.quizStore.gameStart}
+          onClick={gameStart}
         >
           게임시작
         </button>
         <div>
+          질문: {quizList[index].substring(0,2)}
+        </div>
+        <div>
           당신의 답변:
-          {this.props.quizStore.quizState.texts.map((text, index) => (
+          {texts.map((text, index) => (
             <div key={index}>
               {text}
             </div>
