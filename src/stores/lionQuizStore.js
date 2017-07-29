@@ -1,6 +1,7 @@
 import {observable, action} from 'mobx';
 import axios from 'axios';
 import config from '../config.json'
+import ddang from '../ddang.mp3';
 
 export class LionQuizStore {
   @observable
@@ -16,8 +17,8 @@ export class LionQuizStore {
     recognition: null,
     playingGame: false,
     texts: [
-
     ],
+    ddang: null,
     quizData: null
   }
 
@@ -38,10 +39,13 @@ export class LionQuizStore {
     utterance.lang = 'ko-KR';
     utterance.rate = 0.3;
 
+    const audio = new Audio(ddang);
+
     this.quizState = {
       ...this.quizState,
       recognition,
-      utterance
+      utterance,
+      audio
     }
     this.getQuizFromServer()
   }
@@ -178,7 +182,7 @@ export class LionQuizStore {
     }
     this.quizState = state;
     recognition.abort();
-    this.textToSpeech("땡");
+    this.quizState.audio.play();
     console.log(this.quizState.quizList[index]+" 녹음끝");
     this.quizEnded();
   }
