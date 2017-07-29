@@ -20,7 +20,7 @@ export class QuizStore {
     const BrowserSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition;
     const recognition = BrowserSpeechRecognition ? new BrowserSpeechRecognition() : null;
     recognition.lang = 'ko-KR';
-    recognition.continuous = true;
+    recognition.continuous = false;
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
     recognition.start();
@@ -89,6 +89,7 @@ export class QuizStore {
     })
   }
   timeOver = (index) => {
+    console.log(this.quizState.index +","+ index);
     if (this.quizState.index === index){
       this.failAnswer();
     }
