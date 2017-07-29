@@ -8,3 +8,15 @@
 ### 개발 build 및 개발 서버 실행
 1. 터미널에서 프로젝트 디렉토리 이동.
 2. `npm start` 혹은 `yarn start` 실행 
+
+### `src/config.json`
+```
+{
+    "server":{
+        "protocol": "http",
+        "domain": "YOUR DOMAIN",
+        "port": "YOUR PORT",
+        "url": "YOUR URL"
+    }
+}
+```
