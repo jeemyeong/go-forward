@@ -29,7 +29,7 @@ class App extends Component {
           ))}
         </div>
         <div>
-          정답:
+          맞은 정답:
           {this.props.quizStore.quizState.correctAnswerList.map((correctAnswer, index) => (
             <div key={index}>
               {correctAnswer}
