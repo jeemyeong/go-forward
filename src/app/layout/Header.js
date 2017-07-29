@@ -7,7 +7,9 @@ class Header extends React.Component {
     render(){
         return (
             <header className="gf_header" role="banner">
-                <img src={ logo } alt="로고"/>
+                <Link to="/go-forward">
+                    <img src={ logo } alt="로고"/>
+                </Link>
             </header>
         );
     }

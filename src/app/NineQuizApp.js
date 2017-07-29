@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import Header from './layout/Header';
 
-@inject("fourQuizStore")
+@inject("nineQuizStore")
 @observer
-class FourQuizApp extends Component {
+class NineQuizApp extends Component {
   render() {
-  const { gameStart, quizState } = this.props.fourQuizStore;
+  const { gameStart, quizState } = this.props.nineQuizStore;
   const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
     return (
       <div>
         <Header/>
-        <div className="FourQuizApp">
+        <div className="NineQuizApp">
           <button
             onClick={gameStart}
           >
@@ -53,4 +53,4 @@ class FourQuizApp extends Component {
   }
 }
 
-export default FourQuizApp;
+export default NineQuizApp;

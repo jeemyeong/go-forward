@@ -2,16 +2,16 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import Header from './layout/Header';
 
-@inject("fourQuizStore")
+@inject("randomQuizStore")
 @observer
-class FourQuizApp extends Component {
+class RandomQuizApp extends Component {
   render() {
-  const { gameStart, quizState } = this.props.fourQuizStore;
+  const { gameStart, quizState } = this.props.randomQuizStore;
   const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
     return (
       <div>
         <Header/>
-        <div className="FourQuizApp">
+        <div className="RandomQuizApp">
           <button
             onClick={gameStart}
           >
@@ -53,4 +53,4 @@ class FourQuizApp extends Component {
   }
 }
 
-export default FourQuizApp;
+export default RandomQuizApp;
