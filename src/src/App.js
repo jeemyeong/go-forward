@@ -6,7 +6,7 @@ import {observer, inject} from 'mobx-react';
 class App extends Component {
   render() {
   const { gameStart, quizState } = this.props.quizStore;
-  const { quizList, index, texts, playingGame } = quizState;
+  const { quizList, index, texts, playingGame, remainSec } = quizState;
     return (
       <div className="App">
         <button
@@ -16,6 +16,9 @@ class App extends Component {
         </button>
         <div>
           질문: {playingGame && !!quizList[index]? quizList[index].substring(0,2): null}
+        </div>
+        <div>
+          남은시간: {remainSec}
         </div>
         <div>
           당신의 답변:

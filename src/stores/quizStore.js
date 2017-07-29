@@ -5,6 +5,7 @@ export class QuizStore {
   quizState = {
     quizList: ['스타벅스','고진감래','와이파이'],
     index: 0,
+    remainSec: 0,
     correctAnswerList: [],
     recording: false,
     utterance: null,
@@ -25,7 +26,7 @@ export class QuizStore {
     recognition.maxAlternatives = 1;
     recognition.start();
     setTimeout(function() {
-      recognition.stop();
+      recognition.abort();
     }, 10);
 
     const utterance = new SpeechSynthesisUtterance();
@@ -72,21 +73,39 @@ export class QuizStore {
 
   @action
   recordAnswer = () => {
-    const {recognition, index} = this.quizState;
+    const {recognition, index, recording} = this.quizState;
     
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
-    
-    const state = {
-      ...this.quizState,
-      recording: true
+    if(!recording){
+      const state = {
+        ...this.quizState,
+        recording: true
+      }
+      this.quizState = state;
+      
+      recognition.start();
     }
-    this.quizState = state;
-    recognition.start();
-
+    
     this.delay(3000).then(() => {
       this.timeOver(index);
     })
+    this.countDown();
+  }
+
+  @action
+  countDown = (remainSec = 3000) => {
+    const state = {
+      ...this.quizState,
+      remainSec: remainSec
+    }
+    this.quizState = state;
+    if (remainSec <= 0){
+      return;
+    }
+    setTimeout(() => {
+      this.countDown(remainSec-1000)
+    }, 1000);
   }
   timeOver = (index) => {
     console.log(this.quizState.index +","+ index);
@@ -108,8 +127,8 @@ export class QuizStore {
     }
     this.quizState = state;
     recognition.onresult = null;
-    recognition.stop();
-    this.gameStart();
+    recognition.abort();
+    this.delay(500).then(this.gameStart());
   }
   @action
   failAnswer = () => {
@@ -120,10 +139,10 @@ export class QuizStore {
       index: index+1,
     }
     this.quizState = state;
-    recognition.stop();
+    recognition.abort();
     this.textToSpeech("땡");
     console.log(this.quizState.quizList[index]+" 녹음끝");
-    this.gameStart();
+    this.delay(500).then(this.gameStart());
   }
 
   @action
