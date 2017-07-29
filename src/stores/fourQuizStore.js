@@ -37,7 +37,7 @@ export class FourQuizStore {
 
     const utterance = new SpeechSynthesisUtterance();
     utterance.lang = 'ko-KR';
-    utterance.rate = 0.3;
+    utterance.rate = 0.7;
 
     const audio = new Audio(ddang);
 
@@ -118,14 +118,14 @@ export class FourQuizStore {
       recognition.start();
     }
     
-    this.delay(3000).then(() => {
+    this.delay(4000).then(() => {
       this.timeOver(index);
     })
     this.countDown();
   }
 
   @action
-  countDown = (remainSec = 3000) => {
+  countDown = (remainSec = 4000) => {
     const state = {
       ...this.quizState,
       remainSec: remainSec
