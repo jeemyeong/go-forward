@@ -1,4 +1,6 @@
 import {observable, action} from 'mobx';
+import axios from 'axios';
+import config from '../config.json'
 
 export class QuizStore {
   @observable
@@ -8,6 +10,7 @@ export class QuizStore {
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
+    wrongAnswerList: [],
     recording: false,
     utterance: null,
     recognition: null,
@@ -39,12 +42,14 @@ export class QuizStore {
       recognition,
       utterance
     }
+    this.getQuizFromServer()
   }
 
   @action
   gameStart = () => {
     const {quizList, index} = this.quizState;
     if (index===0){
+      
       const state = {
         ...this.quizState,
         playingGame: true,
@@ -59,12 +64,36 @@ export class QuizStore {
         index: 0,
       }
       this.quizState = state;
+      this.getQuizFromServer();
       return null;
     }
     this.textToSpeech(quizList[index]);
     this.delay(500).then(()=>this.recordAnswer());
   }
 
+  @action
+  getQuizFromServer = () => {
+    const url = config.server.url;
+    const req = url + "/four";
+    try{
+      axios.get(req)
+            .then( res => {
+              const state = {
+                ...this.quizState,
+                quizList: [],
+                answerList: []
+              }
+              res.data.map((quiz, index) => {
+                state.quizList.push(quiz.question)
+                state.answerList.push(quiz.answer)
+                return null;
+              })
+              this.quizState = state;
+            })
+    } catch(e){
+      console.log(e);
+    }
+  }
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -133,7 +162,8 @@ export class QuizStore {
   }
   @action
   failAnswer = () => {
-    const {recognition, index} = this.quizState;
+    const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
+    wrongAnswerList.push(quizList[index]+answerList[index][0])
     const state = {
       ...this.quizState,
       recording: false,
@@ -188,6 +218,27 @@ export class QuizStore {
   delay = (t) => new Promise((resolve) => { 
     setTimeout(resolve, t)
   });
+
+  // async getUrlsByUploading(photoFiles, date) {
+  //   const now = Date()
+  //   let urls = {};
+  //   for (var i = 0; i < photoFiles.length; i++) {
+  //     await this.addUrlByUploading(photoFiles[i], i, now, urls, date);
+  //   }
+  //   return urls
+  // }
+  // async addUrlByUploading(photoFile, index, now, urls, date) {
+  //   const filename = now + "(" + index + ")";
+  //   const mountainsRef = this
+  //     .storageRef
+  //     .child(date)
+  //     .child(filename);
+  //   await mountainsRef
+  //     .put(photoFile)
+  //     .then((snapshot) => {
+  //       urls[filename] = snapshot.metadata.downloadURLs[0];
+  //     });
+  // }
 }
 
 export default new QuizStore();
