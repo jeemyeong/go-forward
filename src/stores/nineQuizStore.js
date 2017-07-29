@@ -68,7 +68,7 @@ export class NineQuizStore {
       return null;
     }
     this.textToSpeech(quizList[index]);
-    this.delay(500).then(()=>this.recordAnswer());
+    this.delay(1000).then(()=>this.recordAnswer());
   }
 
   @action
