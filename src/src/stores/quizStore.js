@@ -73,10 +73,10 @@ export class QuizStore {
   @action
   recordAnswer = () => {
     const {recognition, index} = this.quizState;
-    
+
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
-    
+
     const state = {
       ...this.quizState,
       recording: true
@@ -148,7 +148,7 @@ export class QuizStore {
       }
     }
   }
-  
+
   joinStringArray = (ary) => {
     let ret = "";
     for (let i = 0; i < ary.length; i++) {
@@ -157,7 +157,7 @@ export class QuizStore {
     return ret;
   }
 
-  delay = (t) => new Promise((resolve) => { 
+  delay = (t) => new Promise((resolve) => {
     setTimeout(resolve, t)
   });
 }

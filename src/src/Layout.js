@@ -1,7 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import Header from './layout/Header';
 import Main from './layout/Main';
-import Footer from './layout/Footer';
 
 class Layout extends React.Component {
     render(){
@@ -10,7 +10,6 @@ class Layout extends React.Component {
             <div className="gf_pagewrap">
                 <Header/>
                 <Main/>
-                <Footer/>
             </div>
         );
     }
