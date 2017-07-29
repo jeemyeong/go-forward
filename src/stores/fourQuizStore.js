@@ -8,6 +8,8 @@ export class FourQuizStore {
   quizState = {
     quizList: [],
     answerList: [],
+    showLastQuiz: "",
+    showLastAnswer: "",
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
@@ -15,11 +17,13 @@ export class FourQuizStore {
     recording: false,
     utterance: null,
     recognition: null,
-    playingGame: false,
+    started: false,
     texts: [
     ],
     ddang: null,
-    quizData: null
+    quizData: null,
+    successVisible: false,
+    failVisible: false
   }
 
   constructor(props) {
@@ -57,7 +61,9 @@ export class FourQuizStore {
       
       const state = {
         ...this.quizState,
-        playingGame: true,
+        started: true,
+        showLastQuiz: "",
+        showLastAnswer: "",
         correctAnswerList: [],
         wrongAnswerList: []
       }
@@ -104,14 +110,16 @@ export class FourQuizStore {
 
   @action
   recordAnswer = () => {
-    const {recognition, index, recording} = this.quizState;
+    const {recognition, index, recording, quizList} = this.quizState;
 
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
     if(!recording){
       const state = {
         ...this.quizState,
-        recording: true
+        recording: true,
+        showLastQuiz: quizList[index],
+        showLastAnswer: "",
       }
       this.quizState = state;
 
@@ -145,7 +153,7 @@ export class FourQuizStore {
   }
   @action
   successAnswer = (answer) => {
-    const {recognition, index, correctAnswerList, quizList} = this.quizState;
+    const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
     const quizData = [
       ...this.quizState.quizData,
     ]
@@ -157,11 +165,18 @@ export class FourQuizStore {
     const state = {
       ...this.quizState,
       quizData,
+      showLastQuiz: quizList[index],
+      showLastAnswer: answerList[index][0],
       correctAnswerList,
       recording: false,
       index: index+1,
+      successVisible: true
     }
+
     this.quizState = state;
+    setTimeout(() => {
+      this.quizState.successVisible = false
+    }, 1000);
     recognition.onresult = null;
     recognition.abort();
     this.delay(500).then(this.gameStart());
@@ -178,9 +193,14 @@ export class FourQuizStore {
       ...this.quizState,
       recording: false,
       index: index+1,
+      failVisible: true,
       quizData
     }
     this.quizState = state;
+    setTimeout(() => {
+      this.quizState.failVisible = false
+    }, 1000);
+
     recognition.abort();
     this.quizState.audio.play();
     console.log(this.quizState.quizList[index]+" 녹음끝");
@@ -207,6 +227,7 @@ export class FourQuizStore {
   }
 
   identifyAnswer = (index, userAnswer) => {
+    console.log(userAnswer);
     const {quizList, answerList} = this.quizState
     for (let i = 0; i < answerList[index].length; i++) {
       if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){
@@ -218,10 +239,12 @@ export class FourQuizStore {
 
   @action
   quizEnded = async () => {
+    const {quizList, index, answerList} = this.quizState;
     await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
-      playingGame: false,
+      showLastQuiz: quizList[index-1],
+      showLastAnswer: answerList[index-1][0],
       index: 0,
       texts: []
     }

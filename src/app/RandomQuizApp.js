@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
 import Header from './layout/Header';
+import SuccessOverlay from './SuccessOverlay';
+import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import random_text from '../img/random_text.png'
 import sky_start_btn from '../img/sky_start_btn.png'
@@ -10,10 +12,16 @@ import sky_start_btn from '../img/sky_start_btn.png'
 @observer
 class RandomQuizApp extends Component {
   render() {
-  const { gameStart, quizState } = this.props.randomQuizStore;
-  const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
+    const { gameStart, quizState } = this.props.randomQuizStore;
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
+          <SuccessOverlay
+            visible={successVisible}
+          />
+          <FailOverlay
+            visible={failVisible}
+          />
           <Header/>
           <div className="RandomQuizApp fadeInLeft animated">
               <div className="sub_header">
@@ -31,58 +39,27 @@ class RandomQuizApp extends Component {
               </div>
               <div className="question_sect">
                   <span className="one_word black">
-                      {playingGame ? quizList[index][0] : null}
+                      {started ? showLastQuiz[0] : null}
 
 
                   </span>
                   <span className="one_word black">
-                      {playingGame ? quizList[index][1] : null}
+                      {started ? showLastQuiz[1] : null}
 
                   </span>
 
-                  <span className="one_word sky">
-                      {correctAnswerList.map((correctAnswer, index) => (
-
-                              <span key={index}>
-                                  {correctAnswer[2]}
-                              </span>
-
-                      ))}
-                      {wrongAnswerList.map((wrongAnswer, index) => (
-
-                              <span key={index}>
-                                  {wrongAnswer[2]}
-                              </span>
-
-                      ))}
+                  <span className="one_word purple">
+                      {started? showLastAnswer[0] : null}
                   </span>
 
-                  <span className="one_word sky">
-                      {correctAnswerList.map((correctAnswer, index) => (
-
-                              <span key={index}>
-                                  {correctAnswer[3]}
-                              </span>
-
-                      ))}
-
-                      {wrongAnswerList.map((wrongAnswer, index) => (
-
-                              <span key={index}>
-                                  {wrongAnswer[3]}
-                              </span>
-
-                      ))}
+                  <span className="one_word purple">
+                      {started? showLastAnswer[1] : null}
                 </span>
               </div>
-
-
-
-
-            <button
-              onClick={gameStart}
-            >
-              <img src={ sky_start_btn } alt=""/>
+              <button
+                onClick={gameStart}
+              >
+                <img src={ sky_start_btn } alt=""/>
             </button>
 
           </div>
