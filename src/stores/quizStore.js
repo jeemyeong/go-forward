@@ -22,6 +22,10 @@ export class QuizStore {
     recognition.continuous = true;
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
+    recognition.start();
+    setTimeout(function() {
+      recognition.stop();
+    }, 10);
 
     const utterance = new SpeechSynthesisUtterance();
     utterance.lang = 'ko-KR';
