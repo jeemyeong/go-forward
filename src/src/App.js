@@ -32,8 +32,8 @@ class App extends Component {
               {correctAnswer}
             </div>
           ))}
-        </div>    
-      </div>    
+        </div>
+      </div>
     );
   }
 }
