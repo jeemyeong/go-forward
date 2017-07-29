@@ -4,6 +4,7 @@ export class QuizStore {
   @observable
   quizState = {
     quizList: ['스타','고진','와이'],
+    answerList: [['벅스'],['감래'],['파이', '셔츠']],
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
@@ -114,11 +115,11 @@ export class QuizStore {
     }
   }
   @action
-  successAnswer = () => {
+  successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList} = this.quizState;
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
-    correctAnswerList.push(quizList[index])
+    correctAnswerList.push(quizList[index]+answer)
     const state = {
       ...this.quizState,
       correctAnswerList,
@@ -147,7 +148,7 @@ export class QuizStore {
 
   @action
   acceptAnswer = () => {
-    const {recognition} = this.quizState;
+    const {recognition, index} = this.quizState;
     recognition.onresult = (event) => {
       const state = {
         ...this.quizState,
@@ -162,13 +163,17 @@ export class QuizStore {
       }
       this.quizState = state;
       const userAnswer = this.joinStringArray(state.texts);
-      this.submitAnswer(userAnswer);
+      this.submitAnswer(index, userAnswer);
     }
   }
   
-  submitAnswer = (userAnswer) => {
-    if(userAnswer === '벅스' | userAnswer === '감래' | userAnswer === '파이'){
-      this.successAnswer();
+  submitAnswer = (index, userAnswer) => {
+    const {quizList, answerList} = this.quizState
+    for (let i = 0; i < answerList[index].length; i++) {
+      if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){
+        this.successAnswer(userAnswer.substring(userAnswer.length-2,userAnswer.length));
+        break
+      }
     }
   }
 
