@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import Header from './layout/Header';
 import home_icon from '../img/home_icon.png'
 import nine_text from '../img/nine_text.png'
+import green_start_btn from '../img/green_start_btn.png'
 
 @inject("nineQuizStore")
 @observer
@@ -70,7 +71,7 @@ class NineQuizApp extends Component {
             <button
               onClick={gameStart}
             >
-              게임시작
+              <img src={ green_start_btn } alt=""/>
             </button>
 
 

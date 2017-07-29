@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from './layout/Header';
 import home_icon from '../img/home_icon.png'
 import four_text from '../img/four_text.png'
+import purple_start_btn from '../img/purple_start_btn.png'
 
 @inject("fourQuizStore")
 @observer
@@ -77,7 +78,7 @@ class FourQuizApp extends Component {
             <button
               onClick={gameStart}
             >
-              게임시작
+              <img src={purple_start_btn} alt=""/>
             </button>
 
           </div>
@@ -87,4 +88,3 @@ class FourQuizApp extends Component {
 }
 
 export default FourQuizApp;
-    

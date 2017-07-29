@@ -171,6 +171,19 @@
     text-align: center;
 }
 
+.NineQuizApp .sub_header .title_wrap {
+    background-color: #598527;
+}
+.LionQuizApp .sub_header .title_wrap {
+    background-color: #ee5331;
+}
+.FourQuizApp .sub_header .title_wrap {
+    background-color: #6D51A0;
+}
+.RandomQuizApp .sub_header .title_wrap {
+    background-color: #58A5A1;
+}
+
 .sub_header .title_wrap img {
     display: block;
     margin: 0 auto;
@@ -181,18 +194,35 @@
     margin: 11.75vh auto;
     width: 40vw;
     height: 20vh;
-    background: url(../img/clock.png) no-repeat center / cover;
+
     display: -webkit-flex;
     display: -ms-flex;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    color: #D0482B;
     font-weight: bold;
     font-size: 14vw;
     padding-top: 15px;
 }
+
+.NineQuizApp .count_sect {
+    color: #598527;
+    background: url(../img/green_clock.png) no-repeat center / cover;
+}
+.LionQuizApp .count_sect {
+    color: #D0482B;
+    background: url(../img/orange_clock.png) no-repeat center / cover;
+}
+.FourQuizApp .count_sect {
+    color: #6D51A0;
+    background: url(../img/purple_clock.png) no-repeat center / cover;
+}
+.RandomQuizApp .count_sect {
+    color: #58A5A1;
+    background: url(../img/sky_clock.png) no-repeat center / cover;
+}
+
 
 .one_word {
     width: 16vw;
@@ -230,4 +260,27 @@
 .one_word.green {
     background: url(../img/bg_word_green.png) no-repeat center / contain;
     color: #598527;
+}
+
+.one_word.sky {
+    background: url(../img/bg_word_sky.png) no-repeat center / contain;
+    color: #58A5A1;
+}
+
+.NineQuizApp button,
+.LionQuizApp button,
+.RandomQuizApp button,
+.FourQuizApp button {
+    width: 100%;
+    padding: 0;
+    margin: 6.75vh auto 0;
+    background: none;
+    border: none;
+}
+
+.NineQuizApp button img,
+.LionQuizApp button img,
+.RandomQuizApp button img,
+.FourQuizApp button img {
+    height: 10.65vh;
 }

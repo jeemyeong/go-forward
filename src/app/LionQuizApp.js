@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import Header from './layout/Header';
 import home_icon from '../img/home_icon.png'
 import lion_text from '../img/lion_text.png'
+import orange_start_btn from '../img/orange_start_btn.png'
 
 
 @inject("lionQuizStore")
@@ -82,7 +83,7 @@ class LionQuizApp extends Component {
           <button
             onClick={gameStart}
           >
-            게임시작
+            <img src={ orange_start_btn } alt=""/>
           </button>
 
         </div>
