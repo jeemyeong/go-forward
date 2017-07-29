@@ -1,19 +1,24 @@
 import {observable, action} from 'mobx';
+import axios from 'axios';
+import config from '../config.json'
 
-export class QuizStore {
+export class LionQuizStore {
   @observable
   quizState = {
-    quizList: ['스타벅스','고진감래','와이파이'],
+    quizList: [],
+    answerList: [],
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
+    wrongAnswerList: [],
     recording: false,
     utterance: null,
     recognition: null,
     playingGame: false,
     texts: [
 
-    ]
+    ],
+    quizData: null
   }
 
   constructor(props) {
@@ -38,32 +43,54 @@ export class QuizStore {
       recognition,
       utterance
     }
+    this.getQuizFromServer()
   }
 
   @action
   gameStart = () => {
     const {quizList, index} = this.quizState;
     if (index===0){
+      
       const state = {
         ...this.quizState,
         playingGame: true,
-        correctAnswerList: []
+        correctAnswerList: [],
+        wrongAnswerList: []
       }
       this.quizState = state;
     }
     if(quizList.length === index){
-      const state = {
-        ...this.quizState,
-        playingGame: false,
-        index: 0,
-      }
-      this.quizState = state;
+      this.quizEnded();
       return null;
     }
-    this.textToSpeech(quizList[index].substring(0,2));
+    this.textToSpeech(quizList[index]);
     this.delay(500).then(()=>this.recordAnswer());
   }
 
+  @action
+  getQuizFromServer = () => {
+    const url = config.server.url;
+    const req = url + "/lion";
+    try{
+      axios.get(req)
+            .then( res => {
+              const state = {
+                ...this.quizState,
+                quizList: [],
+                answerList: [],
+                quizData: res.data
+              }
+              res.data.map((quiz, index) => {
+                state.quizList.push(quiz.question)
+                state.answerList.push(quiz.answer)
+                return null;
+              })
+              this.quizState = state;
+            })
+    } catch(e){
+      console.log(e);
+    }
+  }
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -108,19 +135,24 @@ export class QuizStore {
     }, 1000);
   }
   timeOver = (index) => {
-    console.log(this.quizState.index +","+ index);
     if (this.quizState.index === index){
       this.failAnswer();
     }
   }
   @action
-  successAnswer = () => {
+  successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList} = this.quizState;
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+    quizData[index].answer_yn = 1
+    quizData[index].exam_yn = 1
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
-    correctAnswerList.push(quizList[index])
+    correctAnswerList.push(quizList[index]+answer)
     const state = {
       ...this.quizState,
+      quizData,
       correctAnswerList,
       recording: false,
       index: index+1,
@@ -132,28 +164,32 @@ export class QuizStore {
   }
   @action
   failAnswer = () => {
-    const {recognition, index} = this.quizState;
+    const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
+    wrongAnswerList.push(quizList[index]+answerList[index][0])
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+    quizData[index].exam_yn = 1
     const state = {
       ...this.quizState,
       recording: false,
       index: index+1,
+      quizData
     }
     this.quizState = state;
     recognition.abort();
     this.textToSpeech("땡");
     console.log(this.quizState.quizList[index]+" 녹음끝");
-    this.delay(500).then(this.gameStart());
+    this.quizEnded();
   }
 
   @action
   acceptAnswer = () => {
-    const {quizList, recognition, index} = this.quizState;
+    const {recognition, index} = this.quizState;
     recognition.onresult = (event) => {
       const state = {
         ...this.quizState,
-        texts: [
-
-        ]
+        texts: []
       }
       for (let i = 0; i < event.results.length; i++) {
         const cur = event.results[i]
@@ -162,13 +198,74 @@ export class QuizStore {
       }
       this.quizState = state;
       const userAnswer = this.joinStringArray(state.texts);
-      console.log(userAnswer);
-      if(quizList[index].substring(2,4) === userAnswer){
-        this.successAnswer();
-      }
+      this.identifyAnswer(index, userAnswer);
     }
   }
   
+  identifyAnswer = (index, userAnswer) => {
+    const {quizList, answerList} = this.quizState
+    for (let i = 0; i < answerList[index].length; i++) {
+      if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){
+        this.successAnswer(userAnswer.substring(userAnswer.length-2,userAnswer.length));
+        break
+      }
+    }
+  }
+
+  @action
+  quizEnded = async () => {
+    await this.putQuizDataToServer()
+    const state = {
+      ...this.quizState,
+      playingGame: false,
+      index: 0,
+      texts: []
+    }
+    this.quizState = state;
+    this.getQuizFromServer()
+  }
+
+  putQuizDataToServer = async () => {
+    const quizData = [
+      ...this.quizState.quizData
+    ]
+    for (let i = 0; i < quizData.length; i++) {
+      quizData[i] = {
+        ...quizData[i],
+        answer: quizData[i].answer.slice()
+      }
+    }
+    console.log(quizData);
+    
+    const url = config.server.url;
+    const req = url + "/lion";
+    try{
+      await axios.put(req,quizData)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+  }
+
+  postNewQuiz = (question, answer) => {
+    const quiz = {
+      question,
+      answer
+    }
+    const url = config.server.url;
+    const req = url + "/lion";
+    try{
+      axios.post(req, quiz)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+  }
+
   joinStringArray = (ary) => {
     let ret = "";
     for (let i = 0; i < ary.length; i++) {
@@ -180,6 +277,7 @@ export class QuizStore {
   delay = (t) => new Promise((resolve) => { 
     setTimeout(resolve, t)
   });
+
 }
 
-export default new QuizStore();
+export default new LionQuizStore();

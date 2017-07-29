@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 
-@inject("quizStore")
+@inject("fourQuizStore")
 @observer
 class App extends Component {
   render() {
-  const { gameStart, quizState } = this.props.quizStore;
-  const { quizList, index, texts, playingGame, remainSec } = quizState;
+  const { gameStart, quizState } = this.props.fourQuizStore;
+  const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
     return (
       <div className="App">
         <button
@@ -15,7 +15,7 @@ class App extends Component {
           게임시작
         </button>
         <div>
-          질문: {playingGame && !!quizList[index]? quizList[index].substring(0,2): null}
+          질문: {playingGame ? quizList[index] : null}
         </div>
         <div>
           남은시간: {remainSec}
@@ -29,10 +29,18 @@ class App extends Component {
           ))}
         </div>
         <div>
-          정답:
-          {this.props.quizStore.quizState.correctAnswerList.map((correctAnswer, index) => (
+          맞은 답:
+          {correctAnswerList.map((correctAnswer, index) => (
             <div key={index}>
               {correctAnswer}
+            </div>
+          ))}
+        </div>    
+        <div>
+          틀린 답:
+          {wrongAnswerList.map((wrongAnswer, index) => (
+            <div key={index}>
+              {wrongAnswer}
             </div>
           ))}
         </div>    
