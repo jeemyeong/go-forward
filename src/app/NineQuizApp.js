@@ -48,11 +48,11 @@ class NineQuizApp extends Component {
 
                   </span>
 
-                  <span className="one_word purple">
+                  <span className="one_word green">
                       {started? showLastAnswer[0] : null}
                   </span>
 
-                  <span className="one_word purple">
+                  <span className="one_word green">
                       {started? showLastAnswer[1] : null}
                 </span>
               </div>
