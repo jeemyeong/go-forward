@@ -85,21 +85,49 @@ export class QuizStore {
     recognition.start();
 
     this.delay(3000).then(() => {
-      const state = {
-        ...this.quizState,
-        recording: false,
-        index: index+1,
-      }
-      this.quizState = state;
-      recognition.stop();
-      console.log(this.quizState.quizList[index]+" 녹음끝");
-      this.gameStart();
+      this.timeOver(index);
     })
+  }
+  timeOver = (index) => {
+    if (this.quizState.index === index){
+      this.failAnswer();
+    }
+  }
+  @action
+  successAnswer = () => {
+    const {recognition, index, correctAnswerList, quizList} = this.quizState;
+    console.log(this.quizState.quizList[index]+" 정답");
+    this.textToSpeech("정답");
+    correctAnswerList.push(quizList[index])
+    const state = {
+      ...this.quizState,
+      correctAnswerList,
+      recording: false,
+      index: index+1,
+    }
+    this.quizState = state;
+    recognition.onresult = null;
+    recognition.stop();
+    this.gameStart();
+  }
+  @action
+  failAnswer = () => {
+    const {recognition, index} = this.quizState;
+    const state = {
+      ...this.quizState,
+      recording: false,
+      index: index+1,
+    }
+    this.quizState = state;
+    recognition.stop();
+    this.textToSpeech("땡");
+    console.log(this.quizState.quizList[index]+" 녹음끝");
+    this.gameStart();
   }
 
   @action
   acceptAnswer = () => {
-    const {quizList, recognition, index, correctAnswerList} = this.quizState;
+    const {quizList, recognition, index} = this.quizState;
     recognition.onresult = (event) => {
       const state = {
         ...this.quizState,
@@ -116,17 +144,7 @@ export class QuizStore {
       const userAnswer = this.joinStringArray(state.texts);
       console.log(userAnswer);
       if(quizList[index].substring(2,4) === userAnswer){
-        console.log(this.quizState.quizList[index]+" 정답");
-        this.textToSpeech("정답");
-        correctAnswerList.push(quizList[index])
-        const state = {
-          ...this.quizState,
-          correctAnswerList,
-          recording: false,
-          index: index+1,
-        }
-        this.quizState = state;
-        recognition.onresult = null;
+        this.successAnswer();
       }
     }
   }
