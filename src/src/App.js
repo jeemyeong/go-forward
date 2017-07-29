@@ -15,7 +15,7 @@ class App extends Component {
           게임시작
         </button>
         <div>
-          질문: {playingGame && !!quizList[index]? quizList[index].substring(0,2): null}
+          질문: {playingGame ? quizList[index] : null}
         </div>
         <div>
           남은시간: {remainSec}

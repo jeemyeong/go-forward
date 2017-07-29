@@ -3,7 +3,7 @@ import {observable, action} from 'mobx';
 export class QuizStore {
   @observable
   quizState = {
-    quizList: ['스타벅스','고진감래','와이파이'],
+    quizList: ['스타','고진','와이'],
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
@@ -60,7 +60,7 @@ export class QuizStore {
       this.quizState = state;
       return null;
     }
-    this.textToSpeech(quizList[index].substring(0,2));
+    this.textToSpeech(quizList[index]);
     this.delay(500).then(()=>this.recordAnswer());
   }
 
@@ -147,7 +147,7 @@ export class QuizStore {
 
   @action
   acceptAnswer = () => {
-    const {quizList, recognition, index} = this.quizState;
+    const {recognition} = this.quizState;
     recognition.onresult = (event) => {
       const state = {
         ...this.quizState,
@@ -162,13 +162,16 @@ export class QuizStore {
       }
       this.quizState = state;
       const userAnswer = this.joinStringArray(state.texts);
-      console.log(userAnswer);
-      if(quizList[index].substring(2,4) === userAnswer){
-        this.successAnswer();
-      }
+      this.submitAnswer(userAnswer);
     }
   }
   
+  submitAnswer = (userAnswer) => {
+    if(userAnswer === '벅스' | userAnswer === '감래' | userAnswer === '파이'){
+      this.successAnswer();
+    }
+  }
+
   joinStringArray = (ary) => {
     let ret = "";
     for (let i = 0; i < ary.length; i++) {
