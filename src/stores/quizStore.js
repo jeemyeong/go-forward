@@ -17,7 +17,8 @@ export class QuizStore {
     playingGame: false,
     texts: [
 
-    ]
+    ],
+    quizData: null
   }
 
   constructor(props) {
@@ -58,12 +59,7 @@ export class QuizStore {
       this.quizState = state;
     }
     if(quizList.length === index){
-      const state = {
-        ...this.quizState,
-        playingGame: false,
-        index: 0,
-      }
-      this.quizState = state;
+      this.quizEnded();
       this.getQuizFromServer();
       return null;
     }
@@ -81,7 +77,8 @@ export class QuizStore {
               const state = {
                 ...this.quizState,
                 quizList: [],
-                answerList: []
+                answerList: [],
+                quizData: res.data
               }
               res.data.map((quiz, index) => {
                 state.quizList.push(quiz.question)
@@ -173,7 +170,7 @@ export class QuizStore {
     recognition.abort();
     this.textToSpeech("땡");
     console.log(this.quizState.quizList[index]+" 녹음끝");
-    this.delay(500).then(this.gameStart());
+    this.quizEnded();
   }
 
   @action
@@ -193,17 +190,42 @@ export class QuizStore {
       }
       this.quizState = state;
       const userAnswer = this.joinStringArray(state.texts);
-      this.submitAnswer(index, userAnswer);
+      this.identifyAnswer(index, userAnswer);
     }
   }
   
-  submitAnswer = (index, userAnswer) => {
+  identifyAnswer = (index, userAnswer) => {
     const {quizList, answerList} = this.quizState
     for (let i = 0; i < answerList[index].length; i++) {
       if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){
         this.successAnswer(userAnswer.substring(userAnswer.length-2,userAnswer.length));
         break
       }
+    }
+  }
+
+  @action
+  quizEnded = () => {
+    this.postQuizDataToServer()
+    const state = {
+      ...this.quizState,
+      playingGame: false,
+      index: 0,
+    }
+    this.quizState = state;
+  }
+
+  postQuizDataToServer = () => {
+    const {quizData} = this.quizState;
+    const url = config.server.url;
+    const req = url + "/four";
+    try{
+      axios.post(req,quizData)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
     }
   }
 
