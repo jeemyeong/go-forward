@@ -13,7 +13,7 @@ ReactDOM.render(
     lionQuizStore={lionQuizStore}
     nineQuizStore={nineQuizStore}
     randomQuizStore={randomQuizStore}
-  >
+    >
     <Layout />
   </Provider>
 , document.getElementById('root'));

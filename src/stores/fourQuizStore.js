@@ -37,7 +37,7 @@ export class FourQuizStore {
 
     const utterance = new SpeechSynthesisUtterance();
     utterance.lang = 'ko-KR';
-    utterance.rate = 0.3;
+    utterance.rate = 0.7;
 
     const audio = new Audio(ddang);
 
@@ -105,7 +105,7 @@ export class FourQuizStore {
   @action
   recordAnswer = () => {
     const {recognition, index, recording} = this.quizState;
-    
+
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
     if(!recording){
@@ -114,18 +114,18 @@ export class FourQuizStore {
         recording: true
       }
       this.quizState = state;
-      
+
       recognition.start();
     }
-    
-    this.delay(3000).then(() => {
+
+    this.delay(4000).then(() => {
       this.timeOver(index);
     })
     this.countDown();
   }
 
   @action
-  countDown = (remainSec = 3000) => {
+  countDown = (remainSec = 4000) => {
     const state = {
       ...this.quizState,
       remainSec: remainSec
@@ -205,7 +205,7 @@ export class FourQuizStore {
       this.identifyAnswer(index, userAnswer);
     }
   }
-  
+
   identifyAnswer = (index, userAnswer) => {
     const {quizList, answerList} = this.quizState
     for (let i = 0; i < answerList[index].length; i++) {
@@ -240,7 +240,7 @@ export class FourQuizStore {
       }
     }
     console.log(quizData);
-    
+
     const url = config.server.url;
     const req = url + "/four";
     try{
@@ -278,7 +278,7 @@ export class FourQuizStore {
     return ret;
   }
 
-  delay = (t) => new Promise((resolve) => { 
+  delay = (t) => new Promise((resolve) => {
     setTimeout(resolve, t)
   });
 
