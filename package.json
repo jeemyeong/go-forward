@@ -2,6 +2,7 @@
   "name": "go-forward",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://jeemyeong.github.io/go-forward",
   "dependencies": {
     "autoprefixer": "7.1.1",
     "babel-core": "6.25.0",
@@ -48,7 +49,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js --env=jsdom"
+    "test": "node scripts/test.js --env=jsdom",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "jest": {
     "collectCoverageFrom": [
@@ -83,7 +86,7 @@
     ]
   },
   "babel": {
-    "plugins":[
+    "plugins": [
       "transform-decorators-legacy"
     ],
     "presets": [
@@ -92,5 +95,8 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "devDependencies": {
+    "gh-pages": "^1.0.0"
   }
 }
