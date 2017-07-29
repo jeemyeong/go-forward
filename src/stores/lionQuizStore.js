@@ -2,7 +2,7 @@ import {observable, action} from 'mobx';
 import axios from 'axios';
 import config from '../config.json'
 
-export class FourQuizStore {
+export class LionQuizStore {
   @observable
   quizState = {
     quizList: [],
@@ -70,7 +70,7 @@ export class FourQuizStore {
   @action
   getQuizFromServer = () => {
     const url = config.server.url;
-    const req = url + "/four";
+    const req = url + "/lion";
     try{
       axios.get(req)
             .then( res => {
@@ -214,7 +214,7 @@ export class FourQuizStore {
 
   @action
   quizEnded = async () => {
-    await this.postQuizDataToServer()
+    await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
       playingGame: false,
@@ -225,7 +225,7 @@ export class FourQuizStore {
     this.getQuizFromServer()
   }
 
-  postQuizDataToServer = async () => {
+  putQuizDataToServer = async () => {
     const quizData = [
       ...this.quizState.quizData
     ]
@@ -238,9 +238,26 @@ export class FourQuizStore {
     console.log(quizData);
     
     const url = config.server.url;
-    const req = url + "/four";
+    const req = url + "/lion";
     try{
-      await axios.post(req,quizData)
+      await axios.put(req,quizData)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+  }
+
+  postNewQuiz = (question, answer) => {
+    const quiz = {
+      question,
+      answer
+    }
+    const url = config.server.url;
+    const req = url + "/lion";
+    try{
+      axios.post(req, quiz)
             .then( res => {
               console.log(res);
             })
@@ -263,4 +280,4 @@ export class FourQuizStore {
 
 }
 
-export default new FourQuizStore();
+export default new LionQuizStore();
