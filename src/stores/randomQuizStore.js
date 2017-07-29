@@ -111,14 +111,13 @@ export class RandomQuizStore {
   @action
   recordAnswer = () => {
     const {recognition, index, recording, quizList} = this.quizState;
-
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
     if(!recording){
       const state = {
         ...this.quizState,
         recording: true,
-        showLastQuiz: quizList[index],
+        showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
         showLastAnswer: "",
       }
       this.quizState = state;
@@ -165,7 +164,7 @@ export class RandomQuizStore {
     const state = {
       ...this.quizState,
       quizData,
-      showLastQuiz: quizList[index],
+      showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
       showLastAnswer: answerList[index][0],
       correctAnswerList,
       recording: false,
@@ -243,7 +242,7 @@ export class RandomQuizStore {
     await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
-      showLastQuiz: quizList[index-1],
+      showLastQuiz: quizList[index-1].split(" ").length>1 ? quizList[index-1].split(" ") : quizList[index-1],
       showLastAnswer: answerList[index-1][0],
       index: 0,
       texts: []
