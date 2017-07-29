@@ -1,0 +1,233 @@
+#root {
+    overflow: hidden;
+}
+
+.splash {
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #D0482B;
+    animation-delay: 2s;
+    animation-duration: .5s;
+}
+
+.splash img {
+    margin: 0 auto;
+    max-width: 60vw;
+    width: 100%;
+    animation-delay: 1s;
+}
+
+
+
+
+.gf_header img {
+    display: block;
+    margin: 0 auto;
+}
+.gf_header {
+    height: 11vh;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 13px 2px #ccc;
+}
+
+.gf_header img {
+    max-width: 37.4vw;
+    width: 100%;
+}
+
+.gf_main {
+    padding: 7.2vw;
+}
+.gf_main > .row + .row {
+    margin-top: 7.2vw;
+}
+
+
+/* 메인 개별 박스 설정 */
+.go_howto {
+    background: url('../img/howto_bg.png') no-repeat center / cover;
+    width: 100%;
+    height: 12vh;
+    margin-bottom: 7.2vw;
+    animation-delay: .5s;
+    text-align: center;
+    padding: calc(40px - 3vw);
+}
+.go_howto img {
+    margin: 0 auto;
+    height: 5vw;
+    margin-right: 2vw;
+}
+
+
+.linkbox_square {
+    width: 100%;
+    height: 146.25px;
+    position: relative;
+    padding: 4vh;
+}
+
+.go_lion {
+    background: url('../img/lion_bg.png') no-repeat center / cover;
+    animation-delay: .7s;
+}
+.go_four {
+    background: url('../img/four_bg.png') no-repeat center / cover;
+    animation-delay: .9s;
+}
+.go_nine {
+    background: url('../img/nine_bg.png') no-repeat center / cover;
+    animation-delay: 1.1s;
+}
+.go_random {
+    background: url('../img/random_bg.png') no-repeat center / cover;
+    animation-delay: 1.3s;
+}
+
+.go_add {
+    background: url('../img/goadd_bg.png') no-repeat center / cover;
+    width: 100%;
+    height: 12vh;
+    margin-top: 7.2vw;
+    animation-delay: 1.5s;
+    text-align: center;
+    padding: calc(40px - 3vw);
+}
+
+.go_add img {
+    margin: 0 auto;
+    height: 5vw;
+    margin-right: 2vw;
+}
+
+
+.linkbox_square .icon_wrap {
+    width: 100%;
+}
+
+.linkbox_square .icon_wrap img {
+    height: 18vw;
+    display: block;
+    margin: 0 auto;
+}
+
+.linkbox_square .text_wrap {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    margin-top: 1.8vh;
+}
+.linkbox_square .text_wrap img {
+    display: block;
+    margin: 0 auto;
+    height: 5vw;
+}
+
+/* each game page */
+.NineQuizApp, .LionQuizApp, .RandomQuizApp, .FourQuizApp {
+    padding: 7.2vw;
+    animation-delay: .5s;
+}
+
+.sub_header {
+    position: relative;
+    width: 100%;
+    height: 4.5vh;
+}
+
+.sub_header:after {
+    clear: both;
+    content: "";
+    display: block;
+}
+
+.sub_header .go_home img {
+    height: 4.5vh;
+    float: left;
+}
+
+.sub_header .title_wrap {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    align-items: center;
+    height: 4.5vh;
+    margin: 0 auto;
+    max-width: 37.5vw;
+    width: 100%;
+    background: #EE5331;
+    border-radius: 3px;
+    text-align: center;
+}
+
+.sub_header .title_wrap img {
+    display: block;
+    margin: 0 auto;
+    height: 3vw;
+}
+
+.count_sect {
+    margin: 11.75vh auto;
+    width: 40vw;
+    height: 20vh;
+    background: url(../img/clock.png) no-repeat center / cover;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #D0482B;
+    font-weight: bold;
+    font-size: 14vw;
+    padding-top: 15px;
+}
+
+.one_word {
+    width: 16vw;
+    height: 16vw;
+    display: -webkit-flex;
+    display: -ms-flex;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 7vw;
+    margin: 0 2.7vw;
+}
+
+.question_sect {
+    display: flex;
+    align-items: center;
+}
+
+.one_word.black {
+    background: url(../img/bg_word_black.png) no-repeat center / contain;
+    color: #565656;
+}
+
+.one_word.orange {
+    background: url(../img/bg_word_orange.png) no-repeat center / contain;
+    color: #D0482B;
+}
+
+.one_word.purple {
+    background: url(../img/bg_word_purple.png) no-repeat center / contain;
+    color: #6d51a0;
+}
+
+.one_word.green {
+    background: url(../img/bg_word_green.png) no-repeat center / contain;
+    color: #598527;
+}
