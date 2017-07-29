@@ -5,8 +5,8 @@ import config from '../config.json'
 export class QuizStore {
   @observable
   quizState = {
-    quizList: ['스타','고진','와이'],
-    answerList: [['벅스'],['감래'],['파이', '셔츠']],
+    quizList: [],
+    answerList: [],
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
@@ -54,7 +54,8 @@ export class QuizStore {
       const state = {
         ...this.quizState,
         playingGame: true,
-        correctAnswerList: []
+        correctAnswerList: [],
+        wrongAnswerList: []
       }
       this.quizState = state;
     }
@@ -135,7 +136,6 @@ export class QuizStore {
     }, 1000);
   }
   timeOver = (index) => {
-    console.log(this.quizState.index +","+ index);
     if (this.quizState.index === index){
       this.failAnswer();
     }
@@ -143,11 +143,17 @@ export class QuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList} = this.quizState;
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+    quizData[index].answer_yn = 1
+    quizData[index].exam_yn = 1
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
     const state = {
       ...this.quizState,
+      quizData,
       correctAnswerList,
       recording: false,
       index: index+1,
@@ -161,10 +167,15 @@ export class QuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+    quizData[index].exam_yn = 1
     const state = {
       ...this.quizState,
       recording: false,
       index: index+1,
+      quizData
     }
     this.quizState = state;
     recognition.abort();
@@ -179,9 +190,7 @@ export class QuizStore {
     recognition.onresult = (event) => {
       const state = {
         ...this.quizState,
-        texts: [
-
-        ]
+        texts: []
       }
       for (let i = 0; i < event.results.length; i++) {
         const cur = event.results[i]
@@ -211,12 +220,23 @@ export class QuizStore {
       ...this.quizState,
       playingGame: false,
       index: 0,
+      texts: []
     }
     this.quizState = state;
   }
 
   postQuizDataToServer = () => {
-    const {quizData} = this.quizState;
+    const quizData = [
+      ...this.quizState.quizData
+    ]
+    for (let i = 0; i < quizData.length; i++) {
+      quizData[i] = {
+        ...quizData[i],
+        answer: quizData[i].answer.slice()
+      }
+    }
+    console.log(quizData);
+    
     const url = config.server.url;
     const req = url + "/four";
     try{
@@ -241,26 +261,6 @@ export class QuizStore {
     setTimeout(resolve, t)
   });
 
-  // async getUrlsByUploading(photoFiles, date) {
-  //   const now = Date()
-  //   let urls = {};
-  //   for (var i = 0; i < photoFiles.length; i++) {
-  //     await this.addUrlByUploading(photoFiles[i], i, now, urls, date);
-  //   }
-  //   return urls
-  // }
-  // async addUrlByUploading(photoFile, index, now, urls, date) {
-  //   const filename = now + "(" + index + ")";
-  //   const mountainsRef = this
-  //     .storageRef
-  //     .child(date)
-  //     .child(filename);
-  //   await mountainsRef
-  //     .put(photoFile)
-  //     .then((snapshot) => {
-  //       urls[filename] = snapshot.metadata.downloadURLs[0];
-  //     });
-  // }
 }
 
 export default new QuizStore();
