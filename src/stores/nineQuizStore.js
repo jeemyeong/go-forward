@@ -8,6 +8,8 @@ export class NineQuizStore {
   quizState = {
     quizList: [],
     answerList: [],
+    showLastQuiz: "",
+    showLastAnswer: "",
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
@@ -15,10 +17,10 @@ export class NineQuizStore {
     recording: false,
     utterance: null,
     recognition: null,
-    playingGame: false,
+    started: false,
     texts: [
-
     ],
+    ddang: null,
     quizData: null
   }
 
@@ -54,10 +56,12 @@ export class NineQuizStore {
   gameStart = () => {
     const {quizList, index} = this.quizState;
     if (index===0){
-
+      
       const state = {
         ...this.quizState,
-        playingGame: true,
+        started: true,
+        showLastQuiz: "",
+        showLastAnswer: "",
         correctAnswerList: [],
         wrongAnswerList: []
       }
@@ -104,14 +108,17 @@ export class NineQuizStore {
 
   @action
   recordAnswer = () => {
-    const {recognition, index, recording} = this.quizState;
+    const {recognition, index, recording, quizList} = this.quizState;
 
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
+    const showLastQuiz = quizList[index].split(" ")
     if(!recording){
       const state = {
         ...this.quizState,
-        recording: true
+        recording: true,
+        showLastQuiz,
+        showLastAnswer: "",
       }
       this.quizState = state;
 
@@ -145,7 +152,7 @@ export class NineQuizStore {
   }
   @action
   successAnswer = (answer) => {
-    const {recognition, index, correctAnswerList, quizList} = this.quizState;
+    const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
     const quizData = [
       ...this.quizState.quizData,
     ]
@@ -157,6 +164,8 @@ export class NineQuizStore {
     const state = {
       ...this.quizState,
       quizData,
+      showLastQuiz: quizList[index].split(" "),
+      showLastAnswer: answerList[index][0],
       correctAnswerList,
       recording: false,
       index: index+1,
@@ -218,10 +227,12 @@ export class NineQuizStore {
 
   @action
   quizEnded = async () => {
+    const {quizList, index, answerList} = this.quizState;
     await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
-      playingGame: false,
+      showLastQuiz: quizList[index-1].split(" "),
+      showLastAnswer: answerList[index-1][0],
       index: 0,
       texts: []
     }
@@ -245,6 +256,23 @@ export class NineQuizStore {
     const req = url + "/nine";
     try{
       await axios.put(req,quizData)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+  }
+
+  postNewQuiz = (question, answer) => {
+    const quiz = {
+      question,
+      answer
+    }
+    const url = config.server.url;
+    const req = url + "/nine";
+    try{
+      axios.post(req, quiz)
             .then( res => {
               console.log(res);
             })

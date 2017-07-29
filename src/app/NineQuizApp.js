@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
@@ -10,8 +9,8 @@ import nine_text from '../img/nine_text.png'
 @observer
 class NineQuizApp extends Component {
   render() {
-  const { gameStart, quizState } = this.props.nineQuizStore;
-  const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
+    const { gameStart, quizState } = this.props.nineQuizStore;
+    const { started, showLastQuiz, remainSec, showLastAnswer } = quizState;
     return (
         <div>
           <Header/>
@@ -23,7 +22,7 @@ class NineQuizApp extends Component {
                       </Link>
                   </div>
                   <div className="title_wrap">
-                      <img src= { nine_text } alt="구구단"/>
+                      <img src= { nine_text } alt="일상단어"/>
                   </div>
               </div>
               <div className="count_sect">
@@ -31,49 +30,28 @@ class NineQuizApp extends Component {
               </div>
               <div className="question_sect">
                   <span className="one_word black">
-                      {playingGame ? quizList[index][0] : null}
+                      {started ? showLastQuiz[0] : null}
 
 
                   </span>
                   <span className="one_word black">
-                      {playingGame ? "x" : "x"}
-
-                  </span>
-                  <span className="one_word black">
-                      {playingGame ? quizList[index][2] : null}
+                      {started ? showLastQuiz[1] : null}
 
                   </span>
 
-                  <span className="one_word green">
-                      {correctAnswerList.map((correctAnswer, index) => (
-
-                              <span key={index}>
-                                  {correctAnswer[3]}{correctAnswer[4]}
-                              </span>
-
-                      ))}
-                      {wrongAnswerList.map((wrongAnswer, index) => (
-
-                              <span key={index}>
-                                  {wrongAnswer[3]}{wrongAnswer[4]}
-                              </span>
-
-                      ))}
+                  <span className="one_word purple">
+                      {started? showLastAnswer[0] : null}
                   </span>
 
-
+                  <span className="one_word purple">
+                      {started? showLastAnswer[1] : null}
+                </span>
               </div>
-
-
-
-
             <button
               onClick={gameStart}
             >
               게임시작
             </button>
-
-
 
           </div>
         </div>
@@ -82,3 +60,4 @@ class NineQuizApp extends Component {
 }
 
 export default NineQuizApp;
+    

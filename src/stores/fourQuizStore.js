@@ -8,6 +8,8 @@ export class FourQuizStore {
   quizState = {
     quizList: [],
     answerList: [],
+    showLastQuiz: "",
+    showLastAnswer: "",
     index: 0,
     remainSec: 0,
     correctAnswerList: [],
@@ -15,7 +17,7 @@ export class FourQuizStore {
     recording: false,
     utterance: null,
     recognition: null,
-    playingGame: false,
+    started: false,
     texts: [
     ],
     ddang: null,
@@ -57,7 +59,9 @@ export class FourQuizStore {
       
       const state = {
         ...this.quizState,
-        playingGame: true,
+        started: true,
+        showLastQuiz: "",
+        showLastAnswer: "",
         correctAnswerList: [],
         wrongAnswerList: []
       }
@@ -104,14 +108,16 @@ export class FourQuizStore {
 
   @action
   recordAnswer = () => {
-    const {recognition, index, recording} = this.quizState;
+    const {recognition, index, recording, quizList} = this.quizState;
 
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
     if(!recording){
       const state = {
         ...this.quizState,
-        recording: true
+        recording: true,
+        showLastQuiz: quizList[index],
+        showLastAnswer: "",
       }
       this.quizState = state;
 
@@ -145,7 +151,7 @@ export class FourQuizStore {
   }
   @action
   successAnswer = (answer) => {
-    const {recognition, index, correctAnswerList, quizList} = this.quizState;
+    const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
     const quizData = [
       ...this.quizState.quizData,
     ]
@@ -157,6 +163,8 @@ export class FourQuizStore {
     const state = {
       ...this.quizState,
       quizData,
+      showLastQuiz: quizList[index],
+      showLastAnswer: answerList[index][0],
       correctAnswerList,
       recording: false,
       index: index+1,
@@ -218,10 +226,12 @@ export class FourQuizStore {
 
   @action
   quizEnded = async () => {
+    const {quizList, index, answerList} = this.quizState;
     await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
-      playingGame: false,
+      showLastQuiz: quizList[index-1],
+      showLastAnswer: answerList[index-1][0],
       index: 0,
       texts: []
     }

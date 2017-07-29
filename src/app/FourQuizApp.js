@@ -9,8 +9,8 @@ import four_text from '../img/four_text.png'
 @observer
 class FourQuizApp extends Component {
   render() {
-  const { gameStart, quizState } = this.props.fourQuizStore;
-  const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
+    const { gameStart, quizState } = this.props.fourQuizStore;
+    const { started, showLastQuiz, remainSec, showLastAnswer } = quizState;
     return (
         <div>
           <Header/>
@@ -30,48 +30,21 @@ class FourQuizApp extends Component {
               </div>
               <div className="question_sect">
                   <span className="one_word black">
-                      {playingGame ? quizList[index][0] : null}
+                      {started ? showLastQuiz[0] : null}
 
 
                   </span>
                   <span className="one_word black">
-                      {playingGame ? quizList[index][1] : null}
+                      {started ? showLastQuiz[1] : null}
 
                   </span>
 
                   <span className="one_word purple">
-                      {correctAnswerList.map((correctAnswer, index) => (
-
-                              <span key={index}>
-                                  {correctAnswer[2]}
-                              </span>
-
-                      ))}
-                      {wrongAnswerList.map((wrongAnswer, index) => (
-
-                              <span key={index}>
-                                  {wrongAnswer[2]}
-                              </span>
-
-                      ))}
+                      {started? showLastAnswer[0] : null}
                   </span>
 
                   <span className="one_word purple">
-                      {correctAnswerList.map((correctAnswer, index) => (
-
-                              <span key={index}>
-                                  {correctAnswer[3]}
-                              </span>
-
-                      ))}
-
-                      {wrongAnswerList.map((wrongAnswer, index) => (
-
-                              <span key={index}>
-                                  {wrongAnswer[3]}
-                              </span>
-
-                      ))}
+                      {started? showLastAnswer[1] : null}
                 </span>
               </div>
             <button
