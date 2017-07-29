@@ -9,6 +9,7 @@ export class QuizStore {
     recording: false,
     utterance: null,
     recognition: null,
+    playingGame: false,
     texts: [
 
     ]
@@ -44,6 +45,7 @@ export class QuizStore {
     if (index===0){
       const state = {
         ...this.quizState,
+        playingGame: true,
         correctAnswerList: []
       }
       this.quizState = state;
@@ -51,6 +53,7 @@ export class QuizStore {
     if(quizList.length === index){
       const state = {
         ...this.quizState,
+        playingGame: false,
         index: 0,
       }
       this.quizState = state;
