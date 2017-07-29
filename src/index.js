@@ -2,11 +2,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './src/App';
 import { Provider } from 'mobx-react';
-import quizStore from './stores/quizStore';
+import fourQuizStore from './stores/quizStore';
 
 ReactDOM.render(
   <Provider 
-    quizStore={quizStore} 
+    fourQuizStore={fourQuizStore} 
   >
     <App />
   </Provider>

@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 
-@inject("quizStore")
+@inject("fourQuizStore")
 @observer
 class App extends Component {
   render() {
-  const { gameStart, quizState } = this.props.quizStore;
+  const { gameStart, quizState } = this.props.fourQuizStore;
   const { quizList, index, texts, playingGame, remainSec, correctAnswerList, wrongAnswerList } = quizState;
     return (
       <div className="App">

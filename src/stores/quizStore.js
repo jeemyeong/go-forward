@@ -2,7 +2,7 @@ import {observable, action} from 'mobx';
 import axios from 'axios';
 import config from '../config.json'
 
-export class QuizStore {
+export class FourQuizStore {
   @observable
   quizState = {
     quizList: [],
@@ -61,7 +61,6 @@ export class QuizStore {
     }
     if(quizList.length === index){
       this.quizEnded();
-      this.getQuizFromServer();
       return null;
     }
     this.textToSpeech(quizList[index]);
@@ -214,8 +213,8 @@ export class QuizStore {
   }
 
   @action
-  quizEnded = () => {
-    this.postQuizDataToServer()
+  quizEnded = async () => {
+    await this.postQuizDataToServer()
     const state = {
       ...this.quizState,
       playingGame: false,
@@ -223,9 +222,10 @@ export class QuizStore {
       texts: []
     }
     this.quizState = state;
+    this.getQuizFromServer()
   }
 
-  postQuizDataToServer = () => {
+  postQuizDataToServer = async () => {
     const quizData = [
       ...this.quizState.quizData
     ]
@@ -240,7 +240,7 @@ export class QuizStore {
     const url = config.server.url;
     const req = url + "/four";
     try{
-      axios.post(req,quizData)
+      await axios.post(req,quizData)
             .then( res => {
               console.log(res);
             })
@@ -263,4 +263,4 @@ export class QuizStore {
 
 }
 
-export default new QuizStore();
+export default new FourQuizStore();
