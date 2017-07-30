@@ -67,7 +67,6 @@ class LionQuizApp extends Component {
           </button>
 
           </div>
-        </div>
       </div>
     );
   }
