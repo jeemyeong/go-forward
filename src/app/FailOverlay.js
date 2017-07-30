@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import "./overlay.css"
+import incorrect from '../img/incorrect.png'
 
 class FailOverlay extends Component {
   constructor(props){
@@ -33,7 +34,7 @@ class FailOverlay extends Component {
     return (
       <div className="overlay">
         <div className={`FailOverlay ${closing?'bounceOut':'bounceIn'} animated bounceIn`}>
-          <h1>오답입니다</h1>
+          <img src={incorrect} alt=""/>
         </div>
       </div>
     );

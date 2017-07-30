@@ -48,11 +48,11 @@ class LionQuizApp extends Component {
 
                   </span>
 
-                  <span className="one_word purple">
+                  <span className="one_word orange">
                       {started? showLastAnswer[0] : null}
                   </span>
 
-                  <span className="one_word purple">
+                  <span className="one_word orange">
                       {started? showLastAnswer[1] : null}
                 </span>
             </div>
@@ -66,6 +66,7 @@ class LionQuizApp extends Component {
             <img src={ orange_start_btn } alt=""/>
           </button>
 
+          </div>
         </div>
     );
   }

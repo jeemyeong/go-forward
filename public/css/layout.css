@@ -50,6 +50,10 @@
     margin-top: 7.2vw;
 }
 
+.howto img {
+    display: block;
+    margin: 0 auto;
+}
 
 /* 메인 개별 박스 설정 */
 .go_howto {

@@ -22,9 +22,11 @@ class Main extends React.Component {
             <div>
                 <Header/>
                 <main className="gf_main" role="main">
-                    <div className="go_howto fadeIn animated">
-                        <img src= { howto_icon } alt=""/><img src= { howto_text } alt=""/>
-                    </div>
+                    <Link to='/go-forward/Howto'>
+                        <div className="go_howto fadeIn animated">
+                            <img src= { howto_icon } alt=""/><img src= { howto_text } alt=""/>
+                        </div>
+                    </Link>
                     <div className="row">
                         <div className="col-xs-6">
                             <Link to="/go-forward/lion">
