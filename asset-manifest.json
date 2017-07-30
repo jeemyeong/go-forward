@@ -1,11 +1,18 @@
 {
-  "main.css": "static/css/main.db4e1d8e.css",
-  "main.css.map": "static/css/main.db4e1d8e.css.map",
-  "main.js": "static/js/main.e357c629.js",
-  "main.js.map": "static/js/main.e357c629.js.map",
+  "main.css": "static/css/main.c6ecbc6e.css",
+  "main.css.map": "static/css/main.c6ecbc6e.css.map",
+  "main.js": "static/js/main.d7393714.js",
+  "main.js.map": "static/js/main.d7393714.js.map",
+  "static/media/correct.png": "static/media/correct.87365c7f.png",
   "static/media/ddang.mp3": "static/media/ddang.19916146.mp3",
+  "static/media/howto_1.png": "static/media/howto_1.72180473.png",
+  "static/media/howto_2.png": "static/media/howto_2.0324a422.png",
+  "static/media/howto_3.png": "static/media/howto_3.4837ee9e.png",
+  "static/media/howto_4.png": "static/media/howto_4.a4e7f2a0.png",
+  "static/media/howto_5.png": "static/media/howto_5.d61b9478.png",
   "static/media/howto_icon.png": "static/media/howto_icon.37e7645c.png",
   "static/media/icon_random.png": "static/media/icon_random.1a5a4923.png",
+  "static/media/incorrect.png": "static/media/incorrect.54180337.png",
   "static/media/logo.png": "static/media/logo.edd2f2a2.png",
   "static/media/splash.png": "static/media/splash.79533f0c.png"
 }
