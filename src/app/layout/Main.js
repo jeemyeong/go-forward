@@ -79,9 +79,6 @@ class Main extends React.Component {
                             </Link>
                         </div>
                     </div>
-                    <div className="go_add fadeIn animated">
-                        <img src={ add_text } alt=""/>
-                    </div>
                 </main>
             </div>
         );
