@@ -1,6 +1,4 @@
 import {observable, action} from 'mobx';
-import axios from 'axios';
-import config from '../config.json'
 import ddang from '../ddang.mp3';
 
 export class RandomQuizStore {
@@ -21,7 +19,6 @@ export class RandomQuizStore {
     texts: [
     ],
     ddang: null,
-    quizData: null,
     successVisible: false,
     failVisible: false
   }
@@ -51,7 +48,7 @@ export class RandomQuizStore {
       utterance,
       audio
     }
-    this.getQuizFromServer()
+    this.getQuiz()
   }
 
   @action
@@ -78,29 +75,15 @@ export class RandomQuizStore {
   }
 
   @action
-  getQuizFromServer = () => {
-    const url = config.server.url;
-    const req = url + "/random";
-    try{
-      axios.get(req)
-            .then( res => {
-              const state = {
-                ...this.quizState,
-                quizList: [],
-                answerList: [],
-                quizData: res.data
-              }
-              res.data.map((quiz, index) => {
-                state.quizList.push(quiz.question)
-                state.answerList.push(quiz.answer)
-                return null;
-              })
-              this.quizState = state;
-            })
-    } catch(e){
-      console.log(e);
+  getQuiz = () => {
+    const state = {
+      ...this.quizState,
+      quizList: ["3 4", "3 3", "4 4"],
+      answerList: [["12"], ["9"], ["16"]],
     }
+    this.quizState = state;
   }
+
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -153,17 +136,11 @@ export class RandomQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
-    const quizData = [
-      ...this.quizState.quizData,
-    ]
-    quizData[index].answer_yn = 1
-    quizData[index].exam_yn = 1
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
     const state = {
       ...this.quizState,
-      quizData,
       showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
       showLastAnswer: answerList[index][0],
       correctAnswerList,
@@ -184,16 +161,11 @@ export class RandomQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
-    const quizData = [
-      ...this.quizState.quizData,
-    ]
-    quizData[index].exam_yn = 1
     const state = {
       ...this.quizState,
       recording: false,
       index: index+1,
       failVisible: true,
-      quizData
     }
     this.quizState = state;
     setTimeout(() => {
@@ -239,7 +211,6 @@ export class RandomQuizStore {
   @action
   quizEnded = async () => {
     const {quizList, index, answerList} = this.quizState;
-    await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
       showLastQuiz: quizList[index-1].split(" ").length>1 ? quizList[index-1].split(" ") : quizList[index-1],
@@ -248,48 +219,7 @@ export class RandomQuizStore {
       texts: []
     }
     this.quizState = state;
-    this.getQuizFromServer()
-  }
-
-  putQuizDataToServer = async () => {
-    const quizData = [
-      ...this.quizState.quizData
-    ]
-    for (let i = 0; i < quizData.length; i++) {
-      quizData[i] = {
-        ...quizData[i],
-        answer: quizData[i].answer.slice()
-      }
-    }
-    console.log(quizData);
-
-    const url = config.server.url;
-    const req = url + "/random";
-    try{
-      await axios.put(req,quizData)
-            .then( res => {
-              console.log(res);
-            })
-    } catch(e){
-      console.log(e);
-    }
-  }
-
-  postNewQuiz = (question, answer) => {
-    const quiz = {
-      question,
-      answer
-    }
-    const url = config.server.url;
-    const req = url + "/random";
-    try{
-      axios.post(req, quiz)
-            .then( res => {
-              console.log(res);
-            })
-    } catch(e){
-      console.log(e);
-    }
+    this.getQuiz()
   }
 
   joinStringArray = (ary) => {

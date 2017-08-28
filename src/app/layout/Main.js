@@ -12,7 +12,6 @@ import icon_random from '../../img/icon_random.png'
 
 import howto_text from '../../img/howto_text.png'
 import howto_icon from '../../img/howto_icon.png'
-import add_text from '../../img/add_text.png'
 
 
 
