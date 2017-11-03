@@ -1,1 +1,3 @@
-server/secrets.json
+secrets.json
+*.pyc
+db.sqlite3
