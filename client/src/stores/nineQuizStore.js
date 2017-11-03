@@ -90,9 +90,9 @@ export class NineQuizStore {
                 answerList: [],
                 quizData: res.data
               }
-              res.data.map((quiz, index) => {
-                state.quizList.push(quiz.question)
-                state.answerList.push(quiz.answer)
+              res.data.results.map((data, index) => {
+                state.quizList.push(data.quiz)
+                state.answerList.push(data.answer_list.split("|"))
                 return null;
               })
               this.quizState = state;
@@ -157,8 +157,6 @@ export class NineQuizStore {
     const quizData = [
       ...this.quizState.quizData,
     ]
-    quizData[index].answer_yn = 1
-    quizData[index].exam_yn = 1
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -188,7 +186,6 @@ export class NineQuizStore {
     const quizData = [
       ...this.quizState.quizData,
     ]
-    quizData[index].exam_yn = 1
     const state = {
       ...this.quizState,
       recording: false,
@@ -253,27 +250,27 @@ export class NineQuizStore {
   }
 
   putQuizDataToServer = async () => {
-    const quizData = [
-      ...this.quizState.quizData
-    ]
-    for (let i = 0; i < quizData.length; i++) {
-      quizData[i] = {
-        ...quizData[i],
-        answer: quizData[i].answer.slice()
-      }
-    }
-    console.log(quizData);
+    // const quizData = [
+    //   ...this.quizState.quizData
+    // ]
+    // for (let i = 0; i < quizData.length; i++) {
+    //   quizData[i] = {
+    //     ...quizData[i],
+    //     answer: quizData[i].answer.slice()
+    //   }
+    // }
+    // console.log(quizData);
 
-    const url = config.server.url;
-    const req = url + "/nine";
-    try{
-      await axios.put(req,quizData)
-            .then( res => {
-              console.log(res);
-            })
-    } catch(e){
-      console.log(e);
-    }
+    // const url = config.server.url;
+    // const req = url + "/nine";
+    // try{
+    //   await axios.put(req,quizData)
+    //         .then( res => {
+    //           console.log(res);
+    //         })
+    // } catch(e){
+    //   console.log(e);
+    // }
   }
 
   postNewQuiz = (question, answer) => {
