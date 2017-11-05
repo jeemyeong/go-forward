@@ -37,12 +37,12 @@ class NineQuizDetail(generics.RetrieveUpdateDestroyAPIView):
 class RandomQuizList(generics.ListCreateAPIView):
     queryset = RandomQuiz.objects.all()
     serializer_class = RandomQuizSerializer
-    name = 'ninequiz-list'
+    name = 'randomquiz-list'
 
 class RandomQuizDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = RandomQuiz.objects.all()
     serializer_class = RandomQuizSerializer
-    name = 'ninequiz-detail'
+    name = 'randomquiz-detail'
 
 class ApiRoot(generics.GenericAPIView):
     name = 'api-root'
