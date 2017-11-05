@@ -75,13 +75,6 @@ export class FourQuizStore {
   }
 
   @action
-<<<<<<< HEAD:src/stores/fourQuizStore.js
-  getQuiz = () => {
-    const state = {
-      ...this.quizState,
-      quizList: ["스타", "삼각", "미니"],
-      answerList: [["벅스"], ["김밥"], ["스탑"]],
-=======
   getQuizFromServer = () => {
     const url = config.server.url;
     const req = url + "/four";
@@ -103,7 +96,6 @@ export class FourQuizStore {
             })
     } catch(e){
       console.log(e);
->>>>>>> with-django-server:client/src/stores/fourQuizStore.js
     }
     this.quizState = state;
   }
@@ -161,12 +153,9 @@ export class FourQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
-<<<<<<< HEAD:src/stores/fourQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/fourQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -192,12 +181,9 @@ export class FourQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
-<<<<<<< HEAD:src/stores/fourQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/fourQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -256,9 +242,6 @@ export class FourQuizStore {
       texts: []
     }
     this.quizState = state;
-<<<<<<< HEAD:src/stores/fourQuizStore.js
-    this.getQuiz()
-=======
     this.getQuizFromServer()
   }
 
@@ -301,7 +284,6 @@ export class FourQuizStore {
     } catch(e){
       console.log(e);
     }
->>>>>>> with-django-server:client/src/stores/fourQuizStore.js
   }
 
   joinStringArray = (ary) => {

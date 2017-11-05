@@ -75,13 +75,6 @@ export class RandomQuizStore {
   }
 
   @action
-<<<<<<< HEAD:src/stores/randomQuizStore.js
-  getQuiz = () => {
-    const state = {
-      ...this.quizState,
-      quizList: ["3 4", "3 3", "4 4"],
-      answerList: [["12"], ["9"], ["16"]],
-=======
   getQuizFromServer = () => {
     const url = config.server.url;
     const req = url + "/random";
@@ -103,7 +96,6 @@ export class RandomQuizStore {
             })
     } catch(e){
       console.log(e);
->>>>>>> with-django-server:client/src/stores/randomQuizStore.js
     }
     this.quizState = state;
   }
@@ -160,12 +152,9 @@ export class RandomQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
-<<<<<<< HEAD:src/stores/randomQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/randomQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -191,12 +180,9 @@ export class RandomQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
-<<<<<<< HEAD:src/stores/randomQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/randomQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -255,9 +241,6 @@ export class RandomQuizStore {
       texts: []
     }
     this.quizState = state;
-<<<<<<< HEAD:src/stores/randomQuizStore.js
-    this.getQuiz()
-=======
     this.getQuizFromServer()
   }
 
@@ -300,7 +283,6 @@ export class RandomQuizStore {
     } catch(e){
       console.log(e);
     }
->>>>>>> with-django-server:client/src/stores/randomQuizStore.js
   }
 
   joinStringArray = (ary) => {

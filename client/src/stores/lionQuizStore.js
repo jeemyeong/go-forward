@@ -75,13 +75,6 @@ export class LionQuizStore {
   }
 
   @action
-<<<<<<< HEAD:src/stores/lionQuizStore.js
-  getQuiz = () => {
-    const state = {
-      ...this.quizState,
-      quizList: ["인생", "결초", "죽마"],
-      answerList: [["무상"], ["보은"], ["고우"]],
-=======
   getQuizFromServer = () => {
     const url = config.server.url;
     const req = url + "/lion";
@@ -103,7 +96,6 @@ export class LionQuizStore {
             })
     } catch(e){
       console.log(e);
->>>>>>> with-django-server:client/src/stores/lionQuizStore.js
     }
     this.quizState = state;
   }
@@ -161,12 +153,9 @@ export class LionQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
-<<<<<<< HEAD:src/stores/lionQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/lionQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -192,12 +181,9 @@ export class LionQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
-<<<<<<< HEAD:src/stores/lionQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/lionQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -256,9 +242,6 @@ export class LionQuizStore {
       texts: []
     }
     this.quizState = state;
-<<<<<<< HEAD:src/stores/lionQuizStore.js
-    this.getQuiz()
-=======
     this.getQuizFromServer()
   }
 
@@ -301,7 +284,6 @@ export class LionQuizStore {
     } catch(e){
       console.log(e);
     }
->>>>>>> with-django-server:client/src/stores/lionQuizStore.js
   }
 
   joinStringArray = (ary) => {

@@ -75,13 +75,6 @@ export class NineQuizStore {
   }
 
   @action
-<<<<<<< HEAD:src/stores/nineQuizStore.js
-  getQuiz = () => {
-    const state = {
-      ...this.quizState,
-      quizList: ["3 4", "3 3", "4 4"],
-      answerList: [["12"], ["9"], ["16"]],
-=======
   getQuizFromServer = () => {
     const url = config.server.url;
     const req = url + "/nine";
@@ -103,7 +96,6 @@ export class NineQuizStore {
             })
     } catch(e){
       console.log(e);
->>>>>>> with-django-server:client/src/stores/nineQuizStore.js
     }
     this.quizState = state;
   }
@@ -161,12 +153,9 @@ export class NineQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
-<<<<<<< HEAD:src/stores/nineQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/nineQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -192,12 +181,9 @@ export class NineQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
-<<<<<<< HEAD:src/stores/nineQuizStore.js
-=======
     const quizData = [
       ...this.quizState.quizData,
     ]
->>>>>>> with-django-server:client/src/stores/nineQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -256,9 +242,6 @@ export class NineQuizStore {
       texts: []
     }
     this.quizState = state;
-<<<<<<< HEAD:src/stores/nineQuizStore.js
-    this.getQuiz()
-=======
     this.getQuizFromServer()
   }
 
@@ -301,7 +284,6 @@ export class NineQuizStore {
     } catch(e){
       console.log(e);
     }
->>>>>>> with-django-server:client/src/stores/nineQuizStore.js
   }
 
   joinStringArray = (ary) => {
