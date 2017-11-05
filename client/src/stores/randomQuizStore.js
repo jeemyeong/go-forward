@@ -1,7 +1,7 @@
 import {observable, action} from 'mobx';
 import ddang from '../ddang.mp3';
 
-export class LionQuizStore {
+export class RandomQuizStore {
   @observable
   quizState = {
     quizList: [],
@@ -75,15 +75,39 @@ export class LionQuizStore {
   }
 
   @action
+<<<<<<< HEAD:src/stores/randomQuizStore.js
   getQuiz = () => {
     const state = {
       ...this.quizState,
-      quizList: ["인생", "결초", "죽마"],
-      answerList: [["무상"], ["보은"], ["고우"]],
+      quizList: ["3 4", "3 3", "4 4"],
+      answerList: [["12"], ["9"], ["16"]],
+=======
+  getQuizFromServer = () => {
+    const url = config.server.url;
+    const req = url + "/random";
+    try{
+      axios.get(req)
+            .then( res => {
+              const state = {
+                ...this.quizState,
+                quizList: [],
+                answerList: [],
+                quizData: res.data
+              }
+              res.data.results.map((data, index) => {
+                state.quizList.push(data.quiz)
+                state.answerList.push(data.answer_list.split("|"))
+                return null;
+              })
+              this.quizState = state;
+            })
+    } catch(e){
+      console.log(e);
+>>>>>>> with-django-server:client/src/stores/randomQuizStore.js
     }
     this.quizState = state;
   }
-  
+
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -94,14 +118,13 @@ export class LionQuizStore {
   @action
   recordAnswer = () => {
     const {recognition, index, recording, quizList} = this.quizState;
-
     this.acceptAnswer()
     console.log(this.quizState.quizList[index]+" 녹음시작");
     if(!recording){
       const state = {
         ...this.quizState,
         recording: true,
-        showLastQuiz: quizList[index],
+        showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
         showLastAnswer: "",
       }
       this.quizState = state;
@@ -137,12 +160,18 @@ export class LionQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
+<<<<<<< HEAD:src/stores/randomQuizStore.js
+=======
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+>>>>>>> with-django-server:client/src/stores/randomQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
     const state = {
       ...this.quizState,
-      showLastQuiz: quizList[index],
+      showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
       showLastAnswer: answerList[index][0],
       correctAnswerList,
       recording: false,
@@ -162,6 +191,12 @@ export class LionQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
+<<<<<<< HEAD:src/stores/randomQuizStore.js
+=======
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+>>>>>>> with-django-server:client/src/stores/randomQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -214,13 +249,58 @@ export class LionQuizStore {
     const {quizList, index, answerList} = this.quizState;
     const state = {
       ...this.quizState,
-      showLastQuiz: quizList[index-1],
+      showLastQuiz: quizList[index-1].split(" ").length>1 ? quizList[index-1].split(" ") : quizList[index-1],
       showLastAnswer: answerList[index-1][0],
       index: 0,
       texts: []
     }
     this.quizState = state;
+<<<<<<< HEAD:src/stores/randomQuizStore.js
     this.getQuiz()
+=======
+    this.getQuizFromServer()
+  }
+
+  putQuizDataToServer = async () => {
+    // const quizData = [
+    //   ...this.quizState.quizData
+    // ]
+    // for (let i = 0; i < quizData.length; i++) {
+    //   quizData[i] = {
+    //     ...quizData[i],
+    //     answer: quizData[i].answer.slice()
+    //   }
+    // }
+    // console.log(quizData);
+
+    // const url = config.server.url;
+    // const req = url + "/random";
+    // try{
+    //   await axios.put(req,quizData)
+    //         .then( res => {
+    //           console.log(res);
+    //         })
+    // } catch(e){
+    //   console.log(e);
+    // }
+  }
+
+  postNewQuiz = (question, answer) => {
+    const quiz = {
+      question,
+      answer
+    }
+    const url = config.server.url;
+    const req = url + "/random";
+    try{
+      axios.post(req, quiz)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+>>>>>>> with-django-server:client/src/stores/randomQuizStore.js
   }
 
   joinStringArray = (ary) => {
@@ -237,4 +317,4 @@ export class LionQuizStore {
 
 }
 
-export default new LionQuizStore();
+export default new RandomQuizStore();

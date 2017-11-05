@@ -75,11 +75,35 @@ export class NineQuizStore {
   }
 
   @action
+<<<<<<< HEAD:src/stores/nineQuizStore.js
   getQuiz = () => {
     const state = {
       ...this.quizState,
       quizList: ["3 4", "3 3", "4 4"],
       answerList: [["12"], ["9"], ["16"]],
+=======
+  getQuizFromServer = () => {
+    const url = config.server.url;
+    const req = url + "/nine";
+    try{
+      axios.get(req)
+            .then( res => {
+              const state = {
+                ...this.quizState,
+                quizList: [],
+                answerList: [],
+                quizData: res.data
+              }
+              res.data.results.map((data, index) => {
+                state.quizList.push(data.quiz)
+                state.answerList.push(data.answer_list.split("|"))
+                return null;
+              })
+              this.quizState = state;
+            })
+    } catch(e){
+      console.log(e);
+>>>>>>> with-django-server:client/src/stores/nineQuizStore.js
     }
     this.quizState = state;
   }
@@ -137,6 +161,12 @@ export class NineQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
+<<<<<<< HEAD:src/stores/nineQuizStore.js
+=======
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+>>>>>>> with-django-server:client/src/stores/nineQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -162,6 +192,12 @@ export class NineQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
+<<<<<<< HEAD:src/stores/nineQuizStore.js
+=======
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+>>>>>>> with-django-server:client/src/stores/nineQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -220,7 +256,52 @@ export class NineQuizStore {
       texts: []
     }
     this.quizState = state;
+<<<<<<< HEAD:src/stores/nineQuizStore.js
     this.getQuiz()
+=======
+    this.getQuizFromServer()
+  }
+
+  putQuizDataToServer = async () => {
+    // const quizData = [
+    //   ...this.quizState.quizData
+    // ]
+    // for (let i = 0; i < quizData.length; i++) {
+    //   quizData[i] = {
+    //     ...quizData[i],
+    //     answer: quizData[i].answer.slice()
+    //   }
+    // }
+    // console.log(quizData);
+
+    // const url = config.server.url;
+    // const req = url + "/nine";
+    // try{
+    //   await axios.put(req,quizData)
+    //         .then( res => {
+    //           console.log(res);
+    //         })
+    // } catch(e){
+    //   console.log(e);
+    // }
+  }
+
+  postNewQuiz = (question, answer) => {
+    const quiz = {
+      question,
+      answer
+    }
+    const url = config.server.url;
+    const req = url + "/nine";
+    try{
+      axios.post(req, quiz)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+>>>>>>> with-django-server:client/src/stores/nineQuizStore.js
   }
 
   joinStringArray = (ary) => {

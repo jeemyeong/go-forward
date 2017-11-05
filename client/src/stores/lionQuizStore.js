@@ -1,7 +1,7 @@
 import {observable, action} from 'mobx';
 import ddang from '../ddang.mp3';
 
-export class FourQuizStore {
+export class LionQuizStore {
   @observable
   quizState = {
     quizList: [],
@@ -75,15 +75,39 @@ export class FourQuizStore {
   }
 
   @action
+<<<<<<< HEAD:src/stores/lionQuizStore.js
   getQuiz = () => {
     const state = {
       ...this.quizState,
-      quizList: ["스타", "삼각", "미니"],
-      answerList: [["벅스"], ["김밥"], ["스탑"]],
+      quizList: ["인생", "결초", "죽마"],
+      answerList: [["무상"], ["보은"], ["고우"]],
+=======
+  getQuizFromServer = () => {
+    const url = config.server.url;
+    const req = url + "/lion";
+    try{
+      axios.get(req)
+            .then( res => {
+              const state = {
+                ...this.quizState,
+                quizList: [],
+                answerList: [],
+                quizData: res.data
+              }
+              res.data.results.map((data, index) => {
+                state.quizList.push(data.quiz)
+                state.answerList.push(data.answer_list.split("|"))
+                return null;
+              })
+              this.quizState = state;
+            })
+    } catch(e){
+      console.log(e);
+>>>>>>> with-django-server:client/src/stores/lionQuizStore.js
     }
     this.quizState = state;
   }
-
+  
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -137,6 +161,12 @@ export class FourQuizStore {
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
+<<<<<<< HEAD:src/stores/lionQuizStore.js
+=======
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+>>>>>>> with-django-server:client/src/stores/lionQuizStore.js
     console.log(this.quizState.quizList[index]+" 정답");
     this.textToSpeech("정답");
     correctAnswerList.push(quizList[index]+answer)
@@ -162,6 +192,12 @@ export class FourQuizStore {
   failAnswer = () => {
     const {recognition, quizList, answerList, wrongAnswerList, index} = this.quizState;
     wrongAnswerList.push(quizList[index]+answerList[index][0])
+<<<<<<< HEAD:src/stores/lionQuizStore.js
+=======
+    const quizData = [
+      ...this.quizState.quizData,
+    ]
+>>>>>>> with-django-server:client/src/stores/lionQuizStore.js
     const state = {
       ...this.quizState,
       recording: false,
@@ -220,7 +256,52 @@ export class FourQuizStore {
       texts: []
     }
     this.quizState = state;
+<<<<<<< HEAD:src/stores/lionQuizStore.js
     this.getQuiz()
+=======
+    this.getQuizFromServer()
+  }
+
+  putQuizDataToServer = async () => {
+    // const quizData = [
+    //   ...this.quizState.quizData
+    // ]
+    // for (let i = 0; i < quizData.length; i++) {
+    //   quizData[i] = {
+    //     ...quizData[i],
+    //     answer: quizData[i].answer.slice()
+    //   }
+    // }
+    // console.log(quizData);
+
+    // const url = config.server.url;
+    // const req = url + "/lion";
+    // try{
+    //   await axios.put(req,quizData)
+    //         .then( res => {
+    //           console.log(res);
+    //         })
+    // } catch(e){
+    //   console.log(e);
+    // }
+  }
+
+  postNewQuiz = (question, answer) => {
+    const quiz = {
+      question,
+      answer
+    }
+    const url = config.server.url;
+    const req = url + "/lion";
+    try{
+      axios.post(req, quiz)
+            .then( res => {
+              console.log(res);
+            })
+    } catch(e){
+      console.log(e);
+    }
+>>>>>>> with-django-server:client/src/stores/lionQuizStore.js
   }
 
   joinStringArray = (ary) => {
@@ -237,4 +318,4 @@ export class FourQuizStore {
 
 }
 
-export default new FourQuizStore();
+export default new LionQuizStore();
