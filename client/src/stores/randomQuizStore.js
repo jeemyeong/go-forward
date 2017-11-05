@@ -1,4 +1,6 @@
 import {observable, action} from 'mobx';
+import axios from 'axios';
+import config from '../config.json'
 import ddang from '../ddang.mp3';
 
 export class RandomQuizStore {
@@ -19,6 +21,7 @@ export class RandomQuizStore {
     texts: [
     ],
     ddang: null,
+    quizData: null,
     successVisible: false,
     failVisible: false
   }
@@ -48,7 +51,7 @@ export class RandomQuizStore {
       utterance,
       audio
     }
-    this.getQuiz()
+    this.getQuizFromServer()
   }
 
   @action
@@ -97,9 +100,7 @@ export class RandomQuizStore {
     } catch(e){
       console.log(e);
     }
-    this.quizState = state;
   }
-
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -160,6 +161,7 @@ export class RandomQuizStore {
     correctAnswerList.push(quizList[index]+answer)
     const state = {
       ...this.quizState,
+      quizData,
       showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
       showLastAnswer: answerList[index][0],
       correctAnswerList,
@@ -188,6 +190,7 @@ export class RandomQuizStore {
       recording: false,
       index: index+1,
       failVisible: true,
+      quizData
     }
     this.quizState = state;
     setTimeout(() => {
@@ -233,6 +236,7 @@ export class RandomQuizStore {
   @action
   quizEnded = async () => {
     const {quizList, index, answerList} = this.quizState;
+    await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
       showLastQuiz: quizList[index-1].split(" ").length>1 ? quizList[index-1].split(" ") : quizList[index-1],
