@@ -1,5 +1,5 @@
 import React from 'react';
-import Main from './layout/Main';
+import Main from './main/Main';
 import Splash from './Splash';
 import FourQuizApp from './FourQuizApp';
 import LionQuizApp from './LionQuizApp';
