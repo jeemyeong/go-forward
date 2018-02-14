@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import "./overlay.css"
+import "../css/overlay.css"
 import correct from '../img/correct.png'
 
 class SuccessOverlay extends Component {
@@ -21,7 +21,7 @@ class SuccessOverlay extends Component {
           this.setState({
             closing: false
           });
-        }, 1000
+        }, 500
       );
     }
   }

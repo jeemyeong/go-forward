@@ -1,14 +1,14 @@
 import React from 'react';
-import Main from './main/Main';
-import FourQuizApp from './FourQuizApp';
-import LionQuizApp from './LionQuizApp';
-import NineQuizApp from './NineQuizApp';
-import RandomQuizApp from './RandomQuizApp';
+import Main from './app/Main';
+import FourQuizApp from './app/FourQuizApp';
+import LionQuizApp from './app/LionQuizApp';
+import NineQuizApp from './app/NineQuizApp';
+import RandomQuizApp from './app/RandomQuizApp';
 import Howto from './layout/Howto';
 import { Route, Switch } from 'react-router-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 
-class Layout extends React.Component {
+class App extends React.Component {
     render(){
         return (
             <div className="gf_pagewrap">
@@ -27,4 +27,4 @@ class Layout extends React.Component {
     }
 }
 
-export default Layout;
+export default App;

@@ -1,18 +1,22 @@
 import React, { Component } from 'react';
 import {observer, inject} from 'mobx-react';
 import { Link } from 'react-router-dom';
-import Header from './layout/Header';
+import Header from '../layout/Header';
 import SuccessOverlay from './SuccessOverlay';
 import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import four_text from '../img/four_text.png'
 import purple_start_btn from '../img/purple_start_btn.png'
 
-@inject("fourQuizStore")
+@inject("quizStore")
 @observer
 class FourQuizApp extends Component {
   render() {
-    const { gameStart, quizState } = this.props.fourQuizStore;
+    const { gameStart, quizState } = this.props.quizStore;
+    if (quizState.gameType !== "four") {
+      this.props.quizStore.setGameType("four")
+      return null;
+    }
     const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>

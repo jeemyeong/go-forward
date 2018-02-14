@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import "./overlay.css"
+import "../css/overlay.css"
 import incorrect from '../img/incorrect.png'
 
 class FailOverlay extends Component {

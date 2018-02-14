@@ -1,10 +1,10 @@
 import React from 'react';
 import Header from './Header';
-import howto_1 from '../../img/howto_1.png'
-import howto_2 from '../../img/howto_2.png'
-import howto_3 from '../../img/howto_3.png'
-import howto_4 from '../../img/howto_4.png'
-import howto_5 from '../../img/howto_5.png'
+import howto_1 from '../img/howto_1.png'
+import howto_2 from '../img/howto_2.png'
+import howto_3 from '../img/howto_3.png'
+import howto_4 from '../img/howto_4.png'
+import howto_5 from '../img/howto_5.png'
 
 
 

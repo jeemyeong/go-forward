@@ -2,8 +2,9 @@ import {observable, action} from 'mobx';
 import axios from 'axios';
 import config from '../config.json'
 import ddang from '../ddang.mp3';
+import _ from 'partial-js';
 
-export class RandomQuizStore {
+export class QuizStore {
   @observable
   quizState = {
     quizList: [],
@@ -23,11 +24,29 @@ export class RandomQuizStore {
     ddang: null,
     quizData: null,
     successVisible: false,
-    failVisible: false
+    failVisible: false,
+    gameType: ""
   }
 
   constructor(props) {
-    // Init recognition
+    const recognition = this.initRecognition();
+    const utterance = this.initUtterance();
+    const audio = new Audio(ddang);
+    
+    this.quizState = {
+      ...this.quizState,
+      recognition,
+      utterance,
+      audio
+    }
+  }
+
+  setGameType = (gameType) => {
+    this.quizState.gameType = gameType
+    this.getQuizFromServer()
+  }
+  
+  initRecognition = () => {
     const BrowserSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition;
     const recognition = BrowserSpeechRecognition ? new BrowserSpeechRecognition() : null;
     recognition.lang = 'ko-KR';
@@ -35,72 +54,66 @@ export class RandomQuizStore {
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
     recognition.start();
-    setTimeout(function() {
-      recognition.abort();
-    }, 10);
+    this.delay(10).then(() => recognition.abort())
+    
+    return recognition;
+  }
 
+  initUtterance = () => {
     const utterance = new SpeechSynthesisUtterance();
     utterance.lang = 'ko-KR';
     utterance.rate = 0.7;
 
-    const audio = new Audio(ddang);
-
-    this.quizState = {
-      ...this.quizState,
-      recognition,
-      utterance,
-      audio
-    }
-    this.getQuizFromServer()
+    return utterance;
   }
 
   @action
   gameStart = () => {
-    const {quizList, index} = this.quizState;
-    if (index===0){
-      
-      const state = {
-        ...this.quizState,
-        started: true,
-        showLastQuiz: "",
-        showLastAnswer: "",
-        correctAnswerList: [],
-        wrongAnswerList: []
-      }
-      this.quizState = state;
+    const state = {
+      ...this.quizState,
+      started: true,
+      showLastQuiz: "",
+      showLastAnswer: "",
+      correctAnswerList: [],
+      wrongAnswerList: []
     }
+    this.quizState = state;
+    this.nextQuiz();
+  }
+
+  nextQuiz = () => {
+    const {quizList, index} = this.quizState;
     if(quizList.length === index){
       this.quizEnded();
       return null;
     }
     this.textToSpeech(quizList[index]);
-    this.delay(500).then(()=>this.recordAnswer());
+    this.delay(500).then(this.recordAnswer);
+  }
+
+  getQuizFromServer = () => {
+    const url = config.server.url;
+    const req = `${url}/${this.quizState.gameType}`;
+    axios.get(req).then( res => {this.pushQuizDataIntoQuizState(res.data)})
   }
 
   @action
-  getQuizFromServer = () => {
-    const url = config.server.url;
-    const req = url + "/random";
-    try{
-      axios.get(req)
-            .then( res => {
-              const state = {
-                ...this.quizState,
-                quizList: [],
-                answerList: [],
-                quizData: res.data
-              }
-              res.data.results.map((data, index) => {
-                state.quizList.push(data.quiz)
-                state.answerList.push(data.answer_list.split("|"))
-                return null;
-              })
-              this.quizState = state;
-            })
-    } catch(e){
-      console.log(e);
+  pushQuizDataIntoQuizState = (quizData) => {
+    const state = {
+      ...this.quizState,
+      quizList: [],
+      answerList: [],
+      quizData
     }
+    state.quizList = _.go(quizData.results,
+      _.map(_.val("quiz"))
+    )
+    state.answerList = _.go(quizData.results,
+      _.map(_.pipe(_.val("answer_list"), answer => answer.split("|")))
+    )
+    this.quizState = state;
   }
+
   textToSpeech = (text) => {
     const synth = window.speechSynthesis;
     const {utterance} = this.quizState;
@@ -117,39 +130,42 @@ export class RandomQuizStore {
       const state = {
         ...this.quizState,
         recording: true,
-        showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
+        showLastQuiz: quizList[index],
         showLastAnswer: "",
       }
       this.quizState = state;
-
+      
       recognition.start();
     }
 
     this.delay(4000).then(() => {
       this.timeOver(index);
     })
-    this.countDown();
+    this.countDown(index);
   }
 
   @action
-  countDown = (remainSec = 4000) => {
+  countDown = (index, remainSec = 4000) => {
+    console.log(this.quizState.index, index, remainSec);
+    if (remainSec <= 0 || this.quizState.index !== index){
+      return;
+    }
     const state = {
       ...this.quizState,
       remainSec: remainSec
     }
     this.quizState = state;
-    if (remainSec <= 0){
-      return;
-    }
     setTimeout(() => {
-      this.countDown(remainSec-1000)
+      this.countDown(index, remainSec-1000)
     }, 1000);
   }
+
   timeOver = (index) => {
     if (this.quizState.index === index){
       this.failAnswer();
     }
   }
+
   @action
   successAnswer = (answer) => {
     const {recognition, index, correctAnswerList, quizList, answerList} = this.quizState;
@@ -162,21 +178,16 @@ export class RandomQuizStore {
     const state = {
       ...this.quizState,
       quizData,
-      showLastQuiz: quizList[index].split(" ").length>1 ? quizList[index].split(" ") : quizList[index],
+      showLastQuiz: quizList[index],
       showLastAnswer: answerList[index][0],
       correctAnswerList,
       recording: false,
       index: index+1,
       successVisible: true
     }
-
     this.quizState = state;
-    setTimeout(() => {
-      this.quizState.successVisible = false
-    }, 1000);
-    recognition.onresult = null;
+    this.delay(500).then(() => {this.quizState.successVisible = false; this.nextQuiz()})
     recognition.abort();
-    this.delay(500).then(this.gameStart());
   }
   @action
   failAnswer = () => {
@@ -193,9 +204,7 @@ export class RandomQuizStore {
       quizData
     }
     this.quizState = state;
-    setTimeout(() => {
-      this.quizState.failVisible = false
-    }, 1000);
+    this.delay(1000).then(() => {this.quizState.failVisible = false})
 
     recognition.abort();
     this.quizState.audio.play();
@@ -209,67 +218,40 @@ export class RandomQuizStore {
     recognition.onresult = (event) => {
       const state = {
         ...this.quizState,
-        texts: []
+        texts: ""
       }
-      for (let i = 0; i < event.results.length; i++) {
-        const cur = event.results[i]
-        const text = cur[0].transcript;
-        state.texts.push(text)
-      }
+      state.texts = _.go(event.results,
+        _.first,
+        _.first,
+        _.val("transcript")
+      )
       this.quizState = state;
-      const userAnswer = this.joinStringArray(state.texts);
-      this.identifyAnswer(index, userAnswer);
+      this.identifyAnswer(index, state.texts);
     }
   }
 
   identifyAnswer = (index, userAnswer) => {
-    console.log(userAnswer);
-    const {quizList, answerList} = this.quizState
-    for (let i = 0; i < answerList[index].length; i++) {
-      if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){
-        this.successAnswer(userAnswer.substring(userAnswer.length-2,userAnswer.length));
-        break
-      }
-    }
+    const splicedUserAnswer = userAnswer.substring(userAnswer.length-2, userAnswer.length);
+    const {answerList} = this.quizState
+    _.go(answerList[index],
+      answerList => answerList.toJS(),
+      _.find(answer => answer === splicedUserAnswer),
+      _.if2(_.identity)(() => this.successAnswer(splicedUserAnswer))
+    )
   }
 
   @action
-  quizEnded = async () => {
+  quizEnded = () => {
     const {quizList, index, answerList} = this.quizState;
-    await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
-      showLastQuiz: quizList[index-1].split(" ").length>1 ? quizList[index-1].split(" ") : quizList[index-1],
+      showLastQuiz: quizList[index-1],
       showLastAnswer: answerList[index-1][0],
       index: 0,
       texts: []
     }
     this.quizState = state;
-    this.getQuizFromServer()
-  }
-
-  putQuizDataToServer = async () => {
-    // const quizData = [
-    //   ...this.quizState.quizData
-    // ]
-    // for (let i = 0; i < quizData.length; i++) {
-    //   quizData[i] = {
-    //     ...quizData[i],
-    //     answer: quizData[i].answer.slice()
-    //   }
-    // }
-    // console.log(quizData);
-
-    // const url = config.server.url;
-    // const req = url + "/random";
-    // try{
-    //   await axios.put(req,quizData)
-    //         .then( res => {
-    //           console.log(res);
-    //         })
-    // } catch(e){
-    //   console.log(e);
-    // }
+    this.getQuizFromServer("four")
   }
 
   postNewQuiz = (question, answer) => {
@@ -278,7 +260,7 @@ export class RandomQuizStore {
       answer
     }
     const url = config.server.url;
-    const req = url + "/random";
+    const req = url + "/four";
     try{
       axios.post(req, quiz)
             .then( res => {
@@ -303,4 +285,4 @@ export class RandomQuizStore {
 
 }
 
-export default new RandomQuizStore();
+export default new QuizStore();
