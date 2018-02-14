@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Header from './Header';
 import howto_1 from '../../img/howto_1.png'
 import howto_2 from '../../img/howto_2.png'
