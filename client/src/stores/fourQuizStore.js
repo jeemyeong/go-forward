@@ -27,7 +27,20 @@ export class FourQuizStore {
   }
 
   constructor(props) {
-    // Init recognition
+    const recognition = this.initRecognition();
+    const utterance = this.initUtterance();
+    const audio = new Audio(ddang);
+    
+    this.quizState = {
+      ...this.quizState,
+      recognition,
+      utterance,
+      audio
+    }
+    this.getQuizFromServer()
+  }
+
+  initRecognition = () => {
     const BrowserSpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || window.mozSpeechRecognition || window.msSpeechRecognition || window.oSpeechRecognition;
     const recognition = BrowserSpeechRecognition ? new BrowserSpeechRecognition() : null;
     recognition.lang = 'ko-KR';
@@ -36,20 +49,16 @@ export class FourQuizStore {
     recognition.maxAlternatives = 1;
     recognition.start();
     recognition.abort();
+    
+    return recognition;
+  }
 
+  initUtterance = () => {
     const utterance = new SpeechSynthesisUtterance();
     utterance.lang = 'ko-KR';
     utterance.rate = 0.7;
 
-    const audio = new Audio(ddang);
-
-    this.quizState = {
-      ...this.quizState,
-      recognition,
-      utterance,
-      audio
-    }
-    this.getQuizFromServer()
+    return utterance;
   }
 
   @action
