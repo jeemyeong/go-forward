@@ -14,9 +14,9 @@
 {
     "server":{
         "protocol": "http",
-        "domain": "YOUR DOMAIN",
-        "port": "YOUR PORT",
-        "url": "YOUR URL"
+        "domain": "localhost",
+        "port": "8000",
+        "url": "http://localhost:8000"
     }
 }
 ```
