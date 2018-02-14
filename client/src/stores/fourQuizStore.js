@@ -35,9 +35,7 @@ export class FourQuizStore {
     recognition.interimResults = true;
     recognition.maxAlternatives = 1;
     recognition.start();
-    setTimeout(function() {
-      recognition.abort();
-    }, 10);
+    recognition.abort();
 
     const utterance = new SpeechSynthesisUtterance();
     utterance.lang = 'ko-KR';
@@ -74,7 +72,7 @@ export class FourQuizStore {
       return null;
     }
     this.textToSpeech(quizList[index]);
-    this.delay(500).then(()=>this.recordAnswer());
+    this.delay(500).then(this.recordAnswer);
   }
 
   @action
@@ -90,10 +88,9 @@ export class FourQuizStore {
                 answerList: [],
                 quizData: res.data
               }
-              res.data.results.map((data, index) => {
+              res.data.results.forEach((data, index) => {
                 state.quizList.push(data.quiz)
                 state.answerList.push(data.answer_list.split("|"))
-                return null;
               })
               this.quizState = state;
             })
@@ -129,23 +126,25 @@ export class FourQuizStore {
     this.delay(4000).then(() => {
       this.timeOver(index);
     })
-    this.countDown();
+    this.countDown(index);
   }
 
   @action
-  countDown = (remainSec = 4000) => {
+  countDown = (index, remainSec = 4000) => {
+    console.log(this.quizState.index, index, remainSec);
+    if (remainSec <= 0 || this.quizState.index !== index){
+      return;
+    }
     const state = {
       ...this.quizState,
       remainSec: remainSec
     }
     this.quizState = state;
-    if (remainSec <= 0){
-      return;
-    }
     setTimeout(() => {
-      this.countDown(remainSec-1000)
+      this.countDown(index, remainSec-1000)
     }, 1000);
   }
+
   timeOver = (index) => {
     if (this.quizState.index === index){
       this.failAnswer();
@@ -227,17 +226,18 @@ export class FourQuizStore {
     console.log(userAnswer);
     const {quizList, answerList} = this.quizState
     for (let i = 0; i < answerList[index].length; i++) {
-      if(userAnswer === answerList[index][i] || userAnswer === (quizList[index] + answerList[index][i])){
-        this.successAnswer(userAnswer.substring(userAnswer.length-2,userAnswer.length));
+      const splicedUserAnswer = userAnswer.substring(userAnswer.length-2, userAnswer.length);
+      if(splicedUserAnswer === answerList[index][i]){
+        this.successAnswer(splicedUserAnswer);
         break
       }
     }
   }
 
   @action
-  quizEnded = async () => {
+  quizEnded = () => {
     const {quizList, index, answerList} = this.quizState;
-    await this.putQuizDataToServer()
+    // await this.putQuizDataToServer()
     const state = {
       ...this.quizState,
       showLastQuiz: quizList[index-1],
@@ -249,7 +249,7 @@ export class FourQuizStore {
     this.getQuizFromServer()
   }
 
-  putQuizDataToServer = async () => {
+  putQuizDataToServer = () => {
     // const quizData = [
     //   ...this.quizState.quizData
     // ]
