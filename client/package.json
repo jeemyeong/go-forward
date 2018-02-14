@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "private": true,
   "homepage": "http://jeemyeong.github.io/go-forward",
-  "proxy": "http://ec2-13-124-64-63.ap-northeast-2.compute.amazonaws.com:8080",
   "dependencies": {
     "autoprefixer": "7.1.1",
     "axios": "^0.16.2",
