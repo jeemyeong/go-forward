@@ -1,6 +1,5 @@
 import React from 'react';
 import Main from './main/Main';
-import Splash from './Splash';
 import FourQuizApp from './FourQuizApp';
 import LionQuizApp from './LionQuizApp';
 import NineQuizApp from './NineQuizApp';
@@ -10,25 +9,7 @@ import { Route, Switch } from 'react-router-dom'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 class Layout extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            loadedSplash: false
-        }
-    }
-    componentDidMount() {
-        setTimeout(()=> {
-            this.setState({
-                loadedSplash: true
-            });
-        }, 2500);
-    }
-
-
     render(){
-        if(!this.state.loadedSplash){
-            return <Splash/>
-        }
         return (
             <div className="gf_pagewrap">
                 <Router>

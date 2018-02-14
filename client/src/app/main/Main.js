@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from './Header';
+import Splash from '../Splash';
 import lion_text from '../../img/lion_text.png'
 import four_text from '../../img/four_text.png'
 import nine_text from '../../img/nine_text.png'
@@ -16,7 +17,24 @@ import howto_icon from '../../img/howto_icon.png'
 
 
 class Main extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            loadedSplash: false
+        }
+    }
+    componentDidMount() {
+        setTimeout(()=> {
+            this.setState({
+                loadedSplash: true
+            });
+        }, 2500);
+    }
+
     render(){
+        if(!this.state.loadedSplash){
+            return <Splash/>
+        }
         return (
             <div>
                 <Header/>
