@@ -6,6 +6,9 @@ import fourQuizStore from './stores/fourQuizStore';
 import lionQuizStore from './stores/lionQuizStore';
 import nineQuizStore from './stores/nineQuizStore';
 import randomQuizStore from './stores/randomQuizStore';
+import './css/animate.css';
+import './css/bootstrap.min.css';
+import './css/layout.css';
 
 ReactDOM.render(
   <Provider
