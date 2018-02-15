@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {inject} from 'mobx-react';
 import Header from '../layout/Header';
 import Splash from './Splash';
 import lion_text from '../img/lion_text.png'
@@ -14,8 +15,7 @@ import icon_random from '../img/icon_random.png'
 import howto_text from '../img/howto_text.png'
 import howto_icon from '../img/howto_icon.png'
 
-
-
+@inject("quizStore")
 class Main extends React.Component {
     constructor(props) {
         super(props);
@@ -46,7 +46,7 @@ class Main extends React.Component {
                     </Link>
                     <div className="row">
                         <div className="col-xs-6">
-                            <Link to="/go-forward/lion">
+                            <Link to="/go-forward/lion" onClick={(e) => this.props.quizStore.setGameType("lion")}>
                                 <div className="go_lion linkbox_square fadeIn animated">
                                     <div className="icon_wrap">
                                         <img src= { icon_lion } alt=""/>
@@ -58,7 +58,7 @@ class Main extends React.Component {
                             </Link>
                         </div>
                         <div className="col-xs-6">
-                            <Link to="/go-forward/four">
+                            <Link to="/go-forward/four" onClick={() => this.props.quizStore.setGameType("four")}>
                                 <div className="go_four linkbox_square fadeIn animated">
                                     <div className="icon_wrap">
                                             <img src= { icon_four } alt=""/>
@@ -72,7 +72,7 @@ class Main extends React.Component {
                     </div>
                     <div className="row">
                         <div className="col-xs-6">
-                            <Link to="/go-forward/nine">
+                            <Link to="/go-forward/nine" onClick={() => this.props.quizStore.setGameType("nine")}>
                                 <div className="go_nine linkbox_square fadeIn animated">
                                     <div className="icon_wrap">
                                         <img src= { icon_nine } alt=""/>
@@ -84,7 +84,7 @@ class Main extends React.Component {
                             </Link>
                         </div>
                         <div className="col-xs-6">
-                            <Link to="/go-forward/random">
+                            <Link to="/go-forward/random" onClick={() => this.props.quizStore.setGameType("random")}>
                                 <div className="go_random linkbox_square fadeIn animated">
                                     <div className="icon_wrap">
                                         <img src= { icon_random } alt=""/>

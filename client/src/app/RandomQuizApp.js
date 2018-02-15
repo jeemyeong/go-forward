@@ -7,18 +7,18 @@ import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import random_text from '../img/random_text.png'
 import sky_start_btn from '../img/sky_start_btn.png'
+import Loading from './Loading'
 
 @inject("quizStore")
 @observer
 class RandomQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.quizStore;
-    if (quizState.gameType !== "random") {
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible, quizList, gameType} = quizState;
+    if (gameType !== "random" || quizList.length === 0) {
       this.props.quizStore.setGameType("random")
-      return null;
+      return <Loading/>
     }
-  
-    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
           <SuccessOverlay

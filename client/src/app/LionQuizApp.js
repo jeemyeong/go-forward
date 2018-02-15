@@ -7,18 +7,18 @@ import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import lion_text from '../img/lion_text.png'
 import orange_start_btn from '../img/orange_start_btn.png'
+import Loading from './Loading'
 
 @inject("quizStore")
 @observer
 class LionQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.quizStore;
-    if (quizState.gameType !== "lion") {
-      this.props.quizStore.setGameType("lion")
-      return null;
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible, quizList, gameType} = quizState;
+    if (gameType !== "four" || quizList.length === 0) {
+      this.props.quizStore.setGameType("four")
+      return <Loading/>
     }
-
-    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
           <SuccessOverlay

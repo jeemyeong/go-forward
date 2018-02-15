@@ -7,18 +7,19 @@ import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import nine_text from '../img/nine_text.png'
 import green_start_btn from '../img/green_start_btn.png'
+import Loading from './Loading'
 
 @inject("quizStore")
 @observer
 class NineQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.quizStore;
-    if (quizState.gameType !== "nine") {
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible, quizList, gameType} = quizState;
+    if (gameType !== "nine" || quizList.length === 0) {
       this.props.quizStore.setGameType("nine")
-      return null;
+      return <Loading/>
     }
-  
-    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
+    console.log(showLastQuiz);
     return (
         <div>
           <SuccessOverlay
@@ -49,7 +50,7 @@ class NineQuizApp extends Component {
 
                   </span>
                   <span className="one_word black">
-                      {started ? showLastQuiz[1] : null}
+                      {started ? showLastQuiz[2] : null}
 
                   </span>
 

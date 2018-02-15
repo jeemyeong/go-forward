@@ -7,17 +7,18 @@ import FailOverlay from './FailOverlay';
 import home_icon from '../img/home_icon.png'
 import four_text from '../img/four_text.png'
 import purple_start_btn from '../img/purple_start_btn.png'
+import Loading from './Loading'
 
 @inject("quizStore")
 @observer
 class FourQuizApp extends Component {
   render() {
     const { gameStart, quizState } = this.props.quizStore;
-    if (quizState.gameType !== "four") {
+    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible, quizList, gameType} = quizState;
+    if (gameType !== "four" || quizList.length === 0) {
       this.props.quizStore.setGameType("four")
-      return null;
+      return <Loading/>
     }
-    const { started, showLastQuiz, remainSec, showLastAnswer, successVisible, failVisible } = quizState;
     return (
         <div>
           <SuccessOverlay
